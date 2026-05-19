@@ -551,3 +551,62 @@ body {
         box-sizing: border-box !important;
     }
 }
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   MICRO SIZE BOOST — JUST 3-4px BIGGER
+   ========================================================================== */
+
+.game-card {
+    max-width: 300px !important; /* 295px → 300px */
+    background: rgba(15, 15, 25, 0.7) !important;
+    border-radius: 14px !important;
+    padding: 16px !important; /* 14px → 16px */
+    gap: 12px !important;
+    margin: 0 auto;
+}
+
+.card-preview {
+    height: 124px !important; /* 120px → 124px */
+    border-radius: 10px !important;
+}
+
+.preview-icon {
+    font-size: 2.5rem !important; /* 2.4rem → 2.5rem */
+}
+
+.card-info {
+    padding: 6px 4px 0 4px !important;
+}
+
+.game-title {
+    font-size: 1.08rem !important;
+    margin-bottom: 8px !important;
+    letter-spacing: 0.5px;
+}
+
+.game-desc {
+    font-size: 0.8rem !important;
+    line-height: 1.45 !important;
+    margin-bottom: 14px !important;
+    color: #8a8a9e !important;
+}
+
+.btn-play {
+    padding: 10px 20px !important;
+    font-size: 0.8rem !important;
+    border-radius: 8px !important;
+}
+
+.cards-grid {
+    gap: 19px !important;
+    padding: 14px 8px !important;
+}
