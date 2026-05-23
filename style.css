@@ -610,3 +610,31 @@ body {
     gap: 19px !important;
     padding: 14px 8px !important;
 }
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   NEO.FUN - ORIGINAL GAMES GRID & HEADING BALANCE FIX
+   ========================================================================== */
+
+/* ==========================================================================
+   NEO.FUN - ORIGINAL GAMES GRID & HEADING BALANCE FIX
+   ========================================================================== */
+
+/* 1. Developer Blogs & Milestones Heading Ko Chota Kiya */
+.blog-section h2, 
+h2:has(+ .coding-high-tag),
+main h2 {
+    font-size: 20px !important; /* Mobile par ab ek line me safe rahega */
+    font-weight: 800;
+    line-height: 1.2;
+    text-transform: capitalize;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
