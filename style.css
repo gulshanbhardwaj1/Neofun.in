@@ -291,12 +291,22 @@ body {
 }
 
 .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 30px;
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(280px,300px));
+
+    justify-content:center;
+
+    gap:26px;
+
+    width:100%;
 }
+   
 
 .game-card {
+    width:100%;
+    max-width:300px;
     background: var(--bg-card);
     border: 1px solid var(--glass-border);
     border-radius: 16px;
@@ -306,6 +316,7 @@ body {
     transition: border-color 0.4s, box-shadow 0.4s, transform 0.1s ease-out;
     transform-style: preserve-3d;
     perspective: 1000px;
+   
 }
 
 .game-card:hover {
