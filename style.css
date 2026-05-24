@@ -693,3 +693,23 @@ main h2 {
     }
 }
 
+
+
+
+
+
+
+
+
+
+/* Asli Desktop aur bade screens par bhi top bar aur slider toggle ko dikhane ke liye */
+@media (min-width: 769px) {
+    .menu-toggle {
+        display: flex !important; /* Three lines/burger icon computer par bhi dikhega */
+    }
+    
+    /* Agar desktop ke main links upar chupane hain taaki sirf toggle dikhe */
+    .nav-links {
+        display: none !important; 
+    }
+}
