@@ -700,8 +700,6 @@ main h2 {
 
 
 
-
-
 /* Asli Desktop aur bade screens par bhi top bar aur slider toggle ko dikhane ke liye */
 @media (min-width: 769px) {
     .menu-toggle {
@@ -711,5 +709,31 @@ main h2 {
     /* Agar desktop ke main links upar chupane hain taaki sirf toggle dikhe */
     .nav-links {
         display: none !important; 
+
+
+
+
+
+
+
+       
+
+
+       /* Image ko card ki boundary ke andar lock karne ke liye */
+.card-preview {
+    position: relative !important;
+    overflow: hidden !important; /* Isse photo border se 1mm bhi baahar nahi niklegi */
+    border-radius: 12px !important; /* Agar corners gol chahiye toh */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Photo automatic dabbe ka size le legi, na choti rahegi na baahar bhagegi */
+.card-preview img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important; /* Isse photo stretch nahi hogi aur perfect fit baithegi */
+}
     }
 }
