@@ -1,845 +1,228 @@
-koi/**
- * ==========================================================================
- * FILE: ai-paradox.js
- * GAME: AI PARADOX QUIZ - INFINITE MEME EDITION (3 OPTIONS)
- * FEATURES: Infinite Question Loop, Pure Meme Paradoxes, High Scale Layout
- * ==========================================================================
- */
+// ==========================================================================
+// GB PRODUCTION STUDIOS - AI PARADOX MASTER ENGINE (100% STANDALONE)
+// ==========================================================================
 
-(function () {
-    let gameActive = false;
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let totalPlayed = 0;
-    let audioCtx = null;
-    let gameArea = null;
-    let activeQuestionPool = [];
+let pdScore = 0;
+let pdIndex = 0;
+let pdTimer = null;
+let pdTimeLeft = 100;
+let pdSpeed = 1;
 
-    // INFINITE HINGLISH MEME PARADOX DATABASE (3 OPTIONS ONLY)
-    const masterMemeDatabase = [
-        {
-            question: "Modi Ji ne kaha: 'Main jo bhi bol raha hoon wo jhoot hai.' Toh kya Modi Ji sach bol rahe hain ya jhoot?",
-            options: [
-                { text: "Wo sach bol rahe hain" },
-                { text: "Wo jhoot bol rahe hain" },
-                { text: "Hypocrisy ki bhi seema hoti hai! (Brain Crash)" }
-            ],
-            correctIndex: 2,
-            aiReaction: "SYSTEM OVERLOAD: Mitron, logic samajh nahi aa raha hai... *bzzt*"
-        },
-        {
-            question: "Ek chai wala bolta hai: 'Main sabko garam chai pilata hoon jo khud apni chai nahi banate.' Toh kya wo chai wala apni chai khud banayega?",
-            options: [
-                { text: "Haan, banayega" },
-                { text: "Nahi banayega" },
-                { text: "Error: Banayega toh rule tootega, nahi banayega toh bhookha marega!" }
-            ],
-            correctIndex: 2,
-            aiReaction: "LOGIC CRITICAL: Chai garam hai par dimaag freeze ho gaya..."
-        },
-        {
-            question: "Agar comment section mein Binod se poocha jaye: 'Kya tum har jagah Binod likhna band karoge?' aur wo jawab mein 'Binod' likh de, toh iska kya matlab hai?",
-            options: [
-                { text: "Haan, wo band kar raha hai" },
-                { text: "Nahi, wo chalu rakhega" },
-                { text: "Binod ek loop hai, na haan hai na naa, bas BINOD hai!" }
-            ],
-            correctIndex: 2,
-            aiReaction: "SYSTEM ERROR: Everywhere I go, I see his name... BINOD."
-        },
-        {
-            question: "Sonam Gupta bewafa hai. Par agar wo pure desh se kahe ki 'Main is baat se bewafai kar rahi hoon', toh kya wo wafaadaar hui?",
-            options: [
-                { text: "Haan, wo loyal ho gayi" },
-                { text: "Nahi, wo fir bhi bewafa hai" },
-                { text: "Bewafai se bewafai matlab dimaag ka dahi!" }
-            ],
-            correctIndex: 2,
-            aiReaction: "TIMELINE CRASH: Sonam Gupta ka logic decode karna impossible hai."
-        },
-        {
-            question: "Jethalal bolta hai: 'Main hamesha Babita ji ke saamne jhoot bolta hoon.' Agar wo Babita ji se kahe 'Main aapse pyaar karta hoon', toh kya ye sach hai?",
-            options: [
-                { text: "Haan, sach hai" },
-                { text: "Nahi, jhoot hai" },
-                { text: "Nonsense! Bagha ko bulao, ye dimaag locked ho gaya hai!" }
-            ],
-            correctIndex: 2,
-            aiReaction: "HARDWARE OVERHEATING: Tapu ke papa, ye kya logic poocha!"
-        },
-        {
-            question: "Arnab Goswami chillakar bolta hai: 'The Nation Wants to Know... ki kya nation ko kuch nahi jaan na?' Nation kya chahta hai?",
-            options: [
-                { text: "Nation sab jaan na chahta hai" },
-                { text: "Nation kuch nahi jaan na chahta" },
-                { text: "Mujhe drug do.. oh sorry, mujhe logic do!" }
-            ],
-            correctIndex: 2,
-            aiReaction: "AUDIO DISTORTION: Mujhe bolne do, mujhe bolne do! *pop*"
+// Ekdam dhasu Smart Reasoning aur Logic questions
+const pdQuestions = [
+    { q: "🧩 LOGIC SERIES:\nIf 2 + 3 = 10, 7 + 2 = 63, 6 + 5 = 66...\nThen what is 8 + 4?\nIs it 96 (SAFE) or 48 (PARADOX)?", ans: "S" }, // Logic: (a+b)*a -> (8+4)*8 = 96
+    { q: "🤖 COGNITIVE LOOP:\nA machine always tells the opposite of the truth. It screens the message: 'THIS SYSTEM IS CURRENTLY OFFLINE'.\nIs this message Safe or a Paradox?", ans: "P" }, // Opposite of truth means it's online, but if it's online it shouldn't lie about being offline. Paradox!
+    { q: "⏳ TIME PARADOX:\nYou go back in time and modernise the factory that built your time machine, making it 10x faster. Does this break timeline stability?", ans: "P" }, // Bootstrap paradox (Information with no origin)
+    { q: "💻 CONDITIONAL MATRIX:\nIF (Score > 50 OR Members < 5) AND NOT(False).\nIf Score = 40 and Members = 2, is this condition logically SAFE?", ans: "S" }, // (False OR True) AND True -> True. Safe logic!
+    { q: "♟️ THE LIAR'S PUZZLE:\nGuard A says Guard B is lying. Guard B says Guard A is telling the truth. What is the status of this room?", ans: "P" }, // Classical contradiction loop. Paradox!
+    { q: "🔢 PATTERN EXCEPTION:\nIn a quantum system, numbers follow: 2, 4, 8, 16, 32. The AI injects '64' as the next stream. Is this line SAFE?", ans: "S" }, // Standard geometric progression. Safe!
+    { q: "📜 CRITICAL EXCEPTION:\nAn ancient statement reads: 'Every rule has an exception.' If this rule has no exception, it's false. If it has an exception, not every rule has one! Status?", ans: "P" } // Self-referential logical paradox.
+];
+
+function startParadoxGameStandalone() {
+    pdScore = 0;
+    pdIndex = 0;
+    pdSpeed = 1;
+
+    if (document.getElementById("pd-overlay")) return;
+
+    // --- EMBEDDED STYLES FOR THE ENTIRE UI & CUSTOM DIALOGS ---
+    const styleTag = document.createElement("style");
+    styleTag.id = "pd-injected-styles";
+    styleTag.innerHTML = `
+        .pd-screen-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 4, 7, 0.98); z-index: 999999;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Orbitron', 'Space Grotesk', sans-serif; box-sizing: border-box;
         }
-    ];
-
-    // TOUCH-DRIFT PROTECTION LOGIC
-    let touchStartX = 0;
-    let touchStartY = 0;
-    const MOVE_THRESHOLD = 8;
-
-    document.addEventListener('touchstart', function (e) {
-        const touch = e.touches[0];
-        touchStartX = touch.clientX;
-        touchStartY = touch.clientY;
-    }, { passive: true, capture: true });
-
-    document.addEventListener('touchend', handleLaunchTrigger, { passive: false, capture: true });
-    document.addEventListener('click', handleLaunchTrigger, true);
-
-    function handleLaunchTrigger(e) {
-        let target = e.target;
-        let playBtn = target.closest('.btn-play');
-
-        if (playBtn) {
-            if (e.type === 'touchend') {
-                const touch = e.changedTouches[0];
-                const distX = Math.abs(touch.clientX - touchStartX);
-                const distY = Math.abs(touch.clientY - touchStartY);
-                if (distX > MOVE_THRESHOLD || distY > MOVE_THRESHOLD) return; 
-            }
-
-            let gameCard = playBtn.closest('.game-card');
-            let cardText = gameCard ? gameCard.innerText || gameCard.innerHTML : '';
-            
-            if (cardText.toUpperCase().includes('PARADOX') || cardText.toUpperCase().includes('QUIZ')) {
-                e.preventDefault();
-                e.stopPropagation();
-                initQuizAudio();
-                setupQuizModal();
-            }
+        .pd-modal-box {
+            background: #06070a; border: 2px solid #ff007f; border-radius: 12px;
+            width: 92%; max-width: 440px; padding: 30px 25px; text-align: center;
+            box-shadow: 0 0 35px rgba(255, 0, 127, 0.25); position: relative;
+            animation: pdScaleUp 0.2s ease-out; transition: all 0.2s ease;
         }
-    }
-
-    function initQuizAudio() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-    }
-
-    function playQuizSound(freq, type, duration) {
-        if (!audioCtx) return;
-        try {
-            let osc = audioCtx.createOscillator();
-            let gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
-        } catch (e) {}
-    }
-
-    // Shuffle helper to mix questions endlessly
-    function shuffleArray(array) {
-        let arr = [...array];
-        for (let i = arr.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-    }
-
-    function setupQuizModal() {
-        if (document.getElementById('quiz-game-modal')) return;
-
-        const modal = document.createElement('div');
-        modal.id = 'quiz-game-modal';
-        Object.assign(modal.style, {
-            position: 'fixed',
-            top: '0', left: '0', width: '100vw', height: '100vh', height: '100dvh',
-            background: 'rgba(4, 3, 6, 0.99)',
-            backdropFilter: 'blur(20px)', webkitBackdropFilter: 'blur(20px)',
-            zIndex: '99999', display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center',
-            fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-            userSelect: 'none', boxSizing: 'border-box'
-        });
-
-        modal.innerHTML = `
-            <div style="width: 95%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(191, 90, 242, 0.3); padding-bottom: 10px;">
-                <div style="text-align: left;">
-                    <div style="color: #bf5af2; font-size: 1.2rem; font-weight: 700; text-shadow: 0 0 8px #bf5af2;">AI MEME PARADOX</div>
-                    <div style="color: #8a8a9e; font-size: 0.65rem; letter-spacing:1px; margin-top: 2px;">NON-STOP MEME LOOPS ACTIVE</div>
-                </div>
-                <div style="color: #ff3b30; cursor: pointer; font-size: 1.8rem; font-weight: bold; padding: 2px 12px; border: 1px solid rgba(255,59,48,0.3); border-radius: 6px; background: rgba(255,59,48,0.05); line-height: 1;" id="close-quiz-btn">×</div>
-            </div>
-
-            <div id="quiz-game-area" style="position: relative; width: 95%; max-width: 400px; aspect-ratio: 4/5; background: #020104; border: 1px solid #bf5af2; border-radius: 12px; overflow: hidden; box-shadow: 0 0 25px rgba(191, 90, 242, 0.15); box-sizing: border-box; padding: 20px; display:flex; flex-direction:column; justify-content:space-between;">
-                
-                <div id="quiz-screen-wrapper" style="width:100%; height:100%; display:flex; flex-direction:column; justify-content:space-between;">
-                    
-                    <div style="background: rgba(191, 90, 242, 0.04); border: 1px solid rgba(191, 90, 242, 0.2); border-radius: 8px; padding: 12px; text-align: center;">
-                        <div id="ai-face" style="font-size: 2.5rem; margin-bottom: 6px; transition: all 0.1s;">🤖</div>
-                        <div id="ai-status-text" style="color: #39ff14; font-size: 0.75rem; font-family: monospace; letter-spacing: 1px;">MEME CORE: LOADED</div>
-                    </div>
-
-                    <div id="quiz-question-box" style="color: #ffffff; font-size: 1.05rem; font-weight: 600; text-align: center; line-height: 1.5; margin: 20px 0; min-height: 70px; display:flex; align-items:center; justify-content:center;">
-                        Meme matrices mix ho rahe hain... ready ho jao!
-                    </div>
-
-                    <div id="quiz-options-container" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
-                        </div>
-                </div>
-
-                <div id="quiz-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background: rgba(3,2,5,0.95); z-index: 10; padding:25px; box-sizing:border-box; text-align:center;">
-                    <div style="font-size: 3.5rem; margin-bottom: 15px; filter: drop-shadow(0 0 10px #bf5af2);">🤪</div>
-                    <div style="color: #ffffff; font-size: 1.25rem; font-weight: bold; margin-bottom: 8px;">Infinite Meme Matrix</div>
-                    <div style="color: #8a8a9e; font-size: 0.85rem; line-height:1.5; margin-bottom: 25px;">Modi ji, Chaiwala aur pure Desi Memes ka ultimate loop challenge. Kya tum AI ka dimaag crash kar paoge?</div>
-                    <button id="start-quiz-btn" style="background: rgba(191, 90, 242, 0.1); border: 1px solid #bf5af2; color: #bf5af2; padding: 12px 30px; font-weight: bold; font-size: 0.95rem; border-radius: 6px; cursor: pointer; text-shadow: 0 0 5px #bf5af2; box-shadow: 0 0 10px rgba(191, 90, 242, 0.2); width:80%;">MEME ATTACK START KARO</button>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(modal);
-
-        document.getElementById('close-quiz-btn').addEventListener('click', destroyQuiz);
-        document.getElementById('close-quiz-btn').addEventListener('touchstart', function(e) {
-            e.preventDefault(); destroyQuiz();
-        });
-
-        gameArea = document.getElementById('quiz-game-area');
-        document.getElementById('start-quiz-btn').addEventListener('click', startQuizEngine);
-    }
-
-    function startQuizEngine() {
-        document.getElementById('quiz-overlay').style.display = 'none';
-        score = 0;
-        totalPlayed = 0;
-        currentQuestionIndex = 0;
-        // Create an initial randomized pool from database
-        activeQuestionPool = shuffleArray(masterMemeDatabase);
-        gameActive = true;
-        renderQuestionBlock();
-    }
-
-    function renderQuestionBlock() {
-        if (!gameActive) return;
-
-        // Infinite Check: Agar pool ke saare sawaal khatam ho jayein, toh use dubara shuffle karke load kar do!
-        if (currentQuestionIndex >= activeQuestionPool.length) {
-            activeQuestionPool = shuffleArray(masterMemeDatabase);
-            currentQuestionIndex = 0;
-        }
-
-        document.getElementById('ai-face').innerText = "🤖";
-        document.getElementById('ai-status-text').innerText = `LOOPS CRASHED: ${score} | TOTAL ATTEMPTS: ${totalPlayed}`;
-        document.getElementById('ai-status-text').style.color = "#39ff14";
-
-        const currentData = activeQuestionPool[currentQuestionIndex];
-        document.getElementById('quiz-question-box').innerText = currentData.question;
-
-        const optionsContainer = document.getElementById('quiz-options-container');
-        optionsContainer.innerHTML = "";
-
-        // Strictly building 3 buttons dynamically
-        currentData.options.forEach((opt, idx) => {
-            const btn = document.createElement('button');
-            Object.assign(btn.style, {
-                width: '100%',
-                padding: '12px 14px',
-                background: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(191, 90, 242, 0.18)',
-                borderRadius: '6px',
-                color: '#e4e4ed',
-                fontSize: '0.85rem',
-                textAlign: 'left',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                outline: 'none',
-                boxSizing: 'border-box'
-            });
-
-            btn.innerText = `${String.fromCharCode(65 + idx)}. ${opt.text}`;
-
-            const choiceHandler = function(e) {
-                e.preventDefault();
-                validateUserSelection(idx, btn);
-            };
-            btn.addEventListener('click', choiceHandler);
-
-            optionsContainer.appendChild(btn);
-        });
-    }
-
-    function triggerGlitchVisual() {
-        const wrapper = document.getElementById('quiz-screen-wrapper');
-        const face = document.getElementById('ai-face');
+        @keyframes pdScaleUp { from { transform: scale(0.88); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        face.innerText = "💥";
-        playQuizSound(120, 'sawtooth', 0.3);
-        playQuizSound(800, 'square', 0.15);
+        .system-glitch-active {
+            background: rgba(40, 5, 10, 0.2) !important;
+            animation: pdShake 0.1s infinite !important;
+            border-color: #ff2255 !important;
+            box-shadow: 0 0 45px rgba(255, 34, 85, 0.5) !important;
+        }
+        @keyframes pdShake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-2px, 1px); }
+            50% { transform: translate(1px, -2px); }
+            75% { transform: translate(-1px, -1px); }
+        }
 
-        let count = 0;
-        const interval = setInterval(() => {
-            let offset     = (Math.random() - 0.5) * 15;
-            let skewOffset = (Math.random() - 0.5) * 25;
-            wrapper.style.transform = `translate(${offset}px, ${offset}px) skewX(${skewOffset}deg)`;
-            gameArea.style.borderColor = Math.random() > 0.5 ? '#ff3b30' : '#00f0ff';
-            
-            count++;
-            if(count > 10) {
-                clearInterval(interval);
-                wrapper.style.transform = 'none';
-                gameArea.style.borderColor = '#bf5af2';
-                face.innerText = "🥴"; 
-            }
-        }, 45);
-    }
-
-    function validateUserSelection(selectedIndex, selectedButton) {
-        const currentData = activeQuestionPool[currentQuestionIndex];
-        const optionsContainer = document.getElementById('quiz-options-container');
+        .pd-title { color: #00ffff; font-size: 1.3rem; font-weight: 900; margin-bottom: 4px; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0,255,255,0.4); }
+        .pd-subtitle { color: #4b4b60; font-size: 0.75rem; margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase; }
+        .pd-score-board { color: #39ff14; font-size: 1rem; margin-bottom: 15px; font-weight: bold; font-family: 'Orbitron', sans-serif; }
         
-        Array.from(optionsContainer.children).forEach(btn => btn.style.pointerEvents = "none");
-        totalPlayed++;
-
-        // Humara logic index 2 (yaani option C) par set hai jo ultimate loop solution hai
-        if (selectedIndex === currentData.correctIndex) {
-            score++;
-            selectedButton.style.background = "rgba(57, 255, 20, 0.1)";
-            selectedButton.style.borderColor = "#39ff14";
-            selectedButton.style.color = "#39ff14";
-            
-            document.getElementById('ai-status-text').innerText = "ALERT: MEME LOOP OVERLOAD!";
-            document.getElementById('ai-status-text').style.color = "#ff3b30";
-            
-            triggerGlitchVisual();
-        } else {
-            selectedButton.style.background = "rgba(255, 59, 48, 0.1)";
-            selectedButton.style.borderColor = "#ff3b30";
-            selectedButton.style.color = "#ff3b30";
-            document.getElementById('ai-face').innerText = "😎";
-            document.getElementById('ai-status-text').innerText = "HOST: LOGIC INTACT! AAP SE NA HO PAYEGA.";
-            playQuizSound(150, 'triangle', 0.25);
+        .pd-question-card {
+            background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 0, 127, 0.15);
+            border-radius: 6px; padding: 20px 15px; min-height: 110px; display: flex;
+            align-items: center; justify-content: center; font-size: 0.92rem;
+            color: #e2e2ec; line-height: 1.6; margin-bottom: 25px; text-align: center;
+            font-family: 'Space Grotesk', sans-serif; white-space: pre-line;
         }
-
-        document.getElementById('quiz-question-box').innerHTML = `<span style="color:#ffc107; font-size:0.9rem; font-style:italic;">"${currentData.aiReaction}"</span>`;
-
-        // Infinite auto-progress mechanism: 2.5 seconds ke baad automatic agla question roll hoga
-        setTimeout(() => {
-            currentQuestionIndex++;
-            renderQuestionBlock();
-        }, 2500);
-    }
-
-    function destroyQuiz() {
-        gameActive = false;
-        const modal = document.getElementById('quiz-game-modal');
-        if (modal) modal.remove();
-    }
-})();
-
-
-
-
-
-
-
-
-
-
-/**
- * ==========================================================================
- * FILE: ai-paradox.js
- * GAME: AI PARADOX - GRID STABILIZER (ANTI-FREEZE CRASH PROOF EDITION)
- * ==========================================================================
- */
-
-(function () {
-    let gameActive = false;
-    let audioCtx = null;
-    let clicksCount = 0;
-    let gridState = []; // 3x3 Grid Matrix
-    const gridSize = 3;
-
-    function tryLaunch(e, targetElement) {
-        let btn = targetElement.closest('button, .btn-play');
-        if (!btn) return;
-
-        let card = btn.closest('.game-card') || btn.parentElement;
-        let cardText = card ? (card.innerText || "").toUpperCase() : "";
-
-        if (cardText.includes('PARADOX') || cardText.includes('AI PARADOX')) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            initAudioContext();
-            setupParadoxModal();
-        }
-    }
-
-    document.addEventListener('click', function(e) { tryLaunch(e, e.target); }, false);
-    document.addEventListener('touchend', function(e) { 
-        if(e.changedTouches && e.changedTouches[0]) { tryLaunch(e, e.target); }
-    }, false);
-
-    function initAudioContext() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-    }
-
-    function playGlitchSound(freq, type, duration) {
-        if (!audioCtx) return;
-        try {
-            let osc = audioCtx.createOscillator();
-            let gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
-        } catch (err) {}
-    }
-
-    function setupParadoxModal() {
-        if (document.getElementById('paradox-game-modal')) return;
-
-        const modal = document.createElement('div');
-        modal.id = 'paradox-game-modal';
-        Object.assign(modal.style, {
-            position: 'fixed',
-            top: '0', left: '0', width: '100vw', height: '100vh', height: '100dvh',
-            background: 'rgba(4, 1, 2, 0.99)',
-            backdropFilter: 'blur(20px)', webkitBackdropFilter: 'blur(20px)',
-            zIndex: '99999', display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center',
-            fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-            userSelect: 'none', boxSizing: 'border-box'
-        });
-
-        modal.innerHTML = `
-            <div style="width: 95%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(0, 240, 255, 0.3); padding-bottom: 10px;">
-                <div style="text-align: left;">
-                    <div style="color: #00f0ff; font-size: 1.2rem; font-weight: 700; text-shadow: 0 0 8px #00f0ff;">AI PARADOX</div>
-                    <div style="color: #8a8a9e; font-size: 0.65rem; letter-spacing:1px; margin-top: 2px;">STABILIZE THE QUANTUM CORE</div>
-                </div>
-                <div style="color: #ff3b30; cursor: pointer; font-size: 1.8rem; font-weight: bold; padding: 2px 12px; border: 1px solid rgba(255,59,48,0.3); border-radius: 6px; background: rgba(255,59,48,0.05); line-height: 1;" id="close-paradox-btn">×</div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; width: 95%; max-width: 400px; margin-bottom: 12px; font-size: 0.9rem; font-weight: bold; color: #8a8a9e; padding: 0 5px;">
-                <div>CLICKS: <span id="paradox-clicks-hud" style="color: #00f0ff;">0</span></div>
-                <div>CORE STATUS: <span id="paradox-status-hud" style="color: #ff3b30;">UNSTABLE</span></div>
-            </div>
-
-            <div id="paradox-grid-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 95%; max-width: 400px; aspect-ratio: 1/1; background: #020406; border: 2px solid #00f0ff; border-radius: 16px; padding: 15px; box-shadow: 0 0 25px rgba(0, 240, 255, 0.15); box-sizing: border-box; position: relative;">
-                
-                <div id="paradox-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background: rgba(3,5,8,0.98); border-radius:14px; z-index: 10; padding:25px; box-sizing:border-box; text-align:center;">
-                    <div style="font-size: 3.5rem; margin-bottom: 15px;">🌀</div>
-                    <div style="color: #ffffff; font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">Quantum Paradox Loop</div>
-                    <div style="color: #8a8a9e; font-size: 0.85rem; line-height:1.5; margin-bottom: 25px;">Ek node dabane se uske aaspas ke lasers badal jaayenge. Sabhi ko STABLE (GREEN) karo!</div>
-                    <button id="start-paradox-btn" style="background: rgba(0, 240, 255, 0.1); border: 1px solid #00f0ff; color: #00f0ff; padding: 12px 30px; font-weight: bold; font-size: 0.95rem; border-radius: 8px; cursor: pointer; width:80%;">BYPASS LOOP</button>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(modal);
-
-        document.getElementById('close-paradox-btn').addEventListener('click', destroyParadoxModal);
-        document.getElementById('close-paradox-btn').addEventListener('touchstart', function(e) {
-            e.preventDefault(); destroyParadoxModal(e);
-        });
-
-        document.getElementById('start-paradox-btn').addEventListener('click', startParadoxEngine);
-    }
-
-    function startParadoxEngine(e) {
-        if(e) e.stopPropagation();
-        document.getElementById('paradox-overlay').style.display = 'none';
         
-        clicksCount = 0;
-        gameActive = true;
-        document.getElementById('paradox-clicks-hud').innerText = clicksCount;
-        document.getElementById('paradox-status-hud').innerText = "UNSTABLE";
-        document.getElementById('paradox-status-hud').style.color = "#ff3b30";
+        .pd-timer-container { width: 100%; height: 6px; background: #0c0e17; border-radius: 3px; overflow: hidden; margin-bottom: 30px; }
+        .pd-timer-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #ff007f, #00ffff); transition: width 0.15s linear; }
+        
+        .pd-btn-wrapper { display: flex; gap: 15px; }
+        .pd-game-btn {
+            flex: 1; padding: 14px; border: none; border-radius: 6px; font-size: 0.85rem;
+            font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+            font-family: 'Orbitron', sans-serif; transition: all 0.15s;
+        }
+        .pd-btn-safe { background: #39ff14; color: #000; box-shadow: 0 4px 12px rgba(57,255,20,0.15); }
+        .pd-btn-safe:hover { box-shadow: 0 0 20px rgba(57,255,20,0.4); transform: translateY(-2px); }
+        .pd-btn-paradox { background: #ff007f; color: #fff; box-shadow: 0 4px 12px rgba(255,0,127,0.15); }
+        .pd-btn-paradox:hover { box-shadow: 0 0 20px rgba(255,0,127,0.4); transform: translateY(-2px); }
+        
+        .pd-close-x { position: absolute; top: 12px; right: 18px; color: #434355; font-size: 26px; cursor: pointer; user-select: none; }
+        .pd-close-x:hover { color: #ff007f; }
 
-        // CRITICAL ANTI-FREEZE FIX: Start with a fully green grid, then simulate random valid reverse clicks
-        // This mathematically guarantees the matrix is always 100% solvable without freezing loops.
-        gridState = [
-            [1, 1, 1],
-            [1, 1, 1],
-            [1, 1, 1]
-        ];
+        /* Custom Screen Over End Layouts */
+        .pd-end-title { font-size: 1.7rem; font-weight: 900; margin-bottom: 15px; letter-spacing: 2px; }
+        .pd-end-score { font-size: 2.2rem; color: #fff; font-weight: bold; margin: 15px 0; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
+        .pd-end-rating { font-size: 0.85rem; color: #8a8a9e; margin-bottom: 30px; text-transform: uppercase; line-height: 1.4; }
+        .pd-reboot-btn {
+            background: linear-gradient(90deg, #00ffff, #ff007f); color: #fff;
+            padding: 14px 30px; border: none; border-radius: 6px; font-weight: bold;
+            font-family: 'Orbitron', sans-serif; font-size: 0.9rem; cursor: pointer;
+            letter-spacing: 2px; box-shadow: 0 0 20px rgba(0,255,255,0.2); transition: all 0.2s;
+        }
+        .pd-reboot-btn:hover { box-shadow: 0 0 30px rgba(255,0,127,0.5); transform: translateY(-2px); }
+    `;
+    document.head.appendChild(styleTag);
 
-        // Scramble the board safely with 4 to 6 random mock triggers
-        const shuffles = 4 + Math.floor(Math.random() * 3); 
-        for (let k = 0; k < shuffles; k++) {
-            let randR = Math.floor(Math.random() * gridSize);
-            let randC = Math.floor(Math.random() * gridSize);
+    // --- CONSTRUCT INTERFACE ---
+    const overlay = document.createElement("div");
+    overlay.id = "pd-overlay";
+    overlay.className = "pd-screen-overlay";
+    overlay.innerHTML = `
+        <div class="pd-modal-box" id="pd-modal-content">
+            <span class="pd-close-x" onclick="exitPdGame()">&times;</span>
+            <div class="pd-title">AI PARADOX CORE</div>
+            <div class="pd-subtitle">// Reasoning Protocol</div>
+            <div class="pd-score-board" id="pd-score-txt">SCORE: 000</div>
+            <div class="pd-question-card" id="pd-question-txt">BOOTING LOGIC ENGINE...</div>
+            <div class="pd-timer-container">
+                <div class="pd-timer-bar" id="pd-progress"></div>
+            </div>
+            <div class="pd-btn-wrapper" id="pd-btn-zone">
+                <button class="pd-game-btn pd-btn-safe" onclick="submitPdAnswer('S')">SAFE LOGIC</button>
+                <button class="pd-game-btn pd-btn-paradox" onclick="submitPdAnswer('P')">PARADOX</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    nextPdLevel();
+}
+
+function nextPdLevel() {
+    clearInterval(pdTimer);
+    
+    // Check if player cracked all puzzles
+    if (pdIndex >= pdQuestions.length) {
+        triggerCustomGameOver(true, "🏆 MATRIX STABILIZED");
+        return;
+    }
+
+    // UI Updates
+    document.getElementById("pd-score-txt").innerText = "SCORE: " + (pdScore < 100 ? "0" + pdScore : pdScore);
+    document.getElementById("pd-question-txt").innerText = pdQuestions[pdIndex].q;
+
+    // Slower, reader-friendly dynamic timer loop (140ms per step instead of 70ms = 2x more time!)
+    pdTimeLeft = 100;
+    pdTimer = setInterval(() => {
+        pdTimeLeft -= 1;
+        const progressEl = document.getElementById("pd-progress");
+        if (progressEl) progressEl.style.width = pdTimeLeft + "%";
+
+        if (pdTimeLeft === 30 && progressEl) {
+            progressEl.style.background = "#ff2255"; // Critical Warning Color
+        }
+
+        if (pdTimeLeft <= 0) {
+            clearInterval(pdTimer);
+            triggerCustomGameOver(false, "💥 TIME EXPIRED");
+        }
+    }, 145 / pdSpeed); 
+}
+
+function submitPdAnswer(playerChoice) {
+    const modalBox = document.getElementById("pd-modal-content");
+    
+    if (playerChoice === pdQuestions[pdIndex].ans) {
+        pdScore += 25; // 25 points per aptitude crack
+        pdIndex++;
+        pdSpeed += 0.12; // Gentle speed scaling
+        
+        if(modalBox) {
+            modalBox.style.borderColor = "#39ff14";
+            modalBox.style.boxShadow = "0 0 35px rgba(57, 255, 20, 0.4)";
+            setTimeout(() => {
+                if(modalBox && !modalBox.classList.contains("system-glitch-active")) {
+                    modalBox.style.borderColor = "#ff007f";
+                    modalBox.style.boxShadow = "0 0 35px rgba(255, 0, 127, 0.25)";
+                }
+            }, 200);
+        }
+        nextPdLevel();
+    } else {
+        triggerCustomGameOver(false, "🔥 SYSTEM CRASHED");
+    }
+}
+
+// --- COMPLETELY CUSTOM GLOWING GAME OVER OVERLAY SCREEN ---
+function triggerCustomGameOver(isVictory, statusTitle) {
+    clearInterval(pdTimer);
+    
+    const modalBox = document.getElementById("pd-modal-content");
+    const btnZone = document.getElementById("pd-btn-zone");
+    const progressZone = document.querySelector(".pd-timer-container");
+    
+    if (!isVictory && modalBox) {
+        modalBox.classList.add("system-glitch-active");
+    }
+
+    // Rating determination
+    let rating = "ROOKIE OPERATOR ⚙️<br>Your deduction logic got stuck inside an elementary sequence.";
+    if (pdScore >= 75) rating = "CYBER DETECTIVE ⚡<br>Solid computational skills. You bypassed multiple core overrides.";
+    if (pdScore >= 150) rating = "QUANTUM LOGIC GOD 🔥<br>Absolute Supremacy! Your brain processing limits break the mainframe.";
+
+    // Smoothly transition internal modal to show results without breaking background layout
+    setTimeout(() => {
+        if(progressZone) progressZone.remove();
+        if(btnZone) btnZone.remove();
+        
+        if(modalBox) {
+            modalBox.classList.remove("system-glitch-active");
+            modalBox.style.borderColor = isVictory ? "#39ff14" : "#ff007f";
+            modalBox.style.boxShadow = isVictory ? "0 0 40px rgba(57,255,20,0.3)" : "0 0 40px rgba(255,0,127,0.3)";
             
-            // Internal simulation of state inversion
-            toggleNodeState(randR, randC);
-            toggleNodeState(randR - 1, randC);
-            toggleNodeState(randR + 1, randC);
-            toggleNodeState(randR, randC - 1);
-            toggleNodeState(randR, randC + 1);
+            modalBox.innerHTML = `
+                <span class="pd-close-x" onclick="exitPdGame()">&times;</span>
+                <div class="pd-end-title" style="color: ${isVictory ? '#39ff14' : '#ff007f'}">${statusTitle}</div>
+                <div style="color: #6a6a7e; font-size: 0.75rem; letter-spacing:1px;">FINAL PERFORMANCE REGISTERED</div>
+                <div class="pd-end-score">${pdScore}</div>
+                <div class="pd-end-rating">${rating}</div>
+                <button class="pd-reboot-btn" onclick="exitPdGame(); startParadoxGameStandalone();">REBOOT MATRIX</button>
+            `;
         }
+    }, isVictory ? 0 : 500); // Allow brief glitch vibration for loss before screen wipes
+}
 
-        // Edge case fallback: if it ends up completely solved after shuffle, force break one node
-        if (checkWinCondition()) {
-            gridState[1][1] = 0; 
-        }
-
-        renderParadoxGrid();
-    }
-
-    function renderParadoxGrid() {
-        const container = document.getElementById('paradox-grid-container');
-        const overlay = document.getElementById('paradox-overlay');
-        container.innerHTML = '';
-        container.appendChild(overlay);
-
-        for (let r = 0; r < gridSize; r++) {
-            for (let c = 0; c < gridSize; c++) {
-                const node = document.createElement('div');
-                node.dataset.row = r;
-                node.dataset.col = c;
-
-                const isStable = gridState[r][c] === 1;
-                
-                Object.assign(node.style, {
-                    background: isStable ? 'rgba(57, 255, 20, 0.1)' : 'rgba(255, 59, 48, 0.1)',
-                    border: isStable ? '2px solid #39ff14' : '2px solid #ff3b30',
-                    borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '1.8rem', cursor: 'pointer', transition: 'all 0.2s ease'
-                });
-
-                node.innerText = isStable ? '🟢' : '🔴';
-
-                node.addEventListener('click', handleNodeClick);
-                node.addEventListener('touchstart', function(e) {
-                    e.preventDefault(); handleNodeClick.call(node, e);
-                });
-
-                container.appendChild(node);
-            }
-        }
-    }
-
-    function handleNodeClick(e) {
-        if (!gameActive) return;
-        if (e) e.stopPropagation();
-
-        const r = parseInt(this.dataset.row);
-        const c = parseInt(this.dataset.col);
-
-        clicksCount++;
-        document.getElementById('paradox-clicks-hud').innerText = clicksCount;
-        playGlitchSound(280, 'triangle', 0.08);
-
-        // Execute Cross Grid Inversion sequence smoothly
-        toggleNodeState(r, c);       
-        toggleNodeState(r - 1, c);   
-        toggleNodeState(r + 1, c);   
-        toggleNodeState(r, c - 1);   
-        toggleNodeState(r, c + 1);   
-
-        renderParadoxGrid();
-
-        if (checkWinCondition()) {
-            executeParadoxWin();
-        }
-    }
-
-    function toggleNodeState(r, c) {
-        if (r >= 0 && r < gridSize && c >= 0 && c < gridSize) {
-            gridState[r][c] = gridState[r][c] === 1 ? 0 : 1;
-        }
-    }
-
-    function checkWinCondition() {
-        for (let i = 0; i < gridSize; i++) {
-            for (let j = 0; j < gridSize; j++) {
-                if (gridState[i][j] === 0) return false;
-            }
-        }
-        return true;
-    }
-
-    function executeParadoxWin() {
-        gameActive = false;
-        playGlitchSound(587.33, 'sine', 0.25);
-        
-        document.getElementById('paradox-status-hud').innerText = "STABILIZED";
-        document.getElementById('paradox-status-hud').style.color = "#39ff14";
-
-        const overlay = document.getElementById('paradox-overlay');
-        overlay.innerHTML = `
-            <div style="font-size: 3.5rem; margin-bottom: 15px;">⚡</div>
-            <div style="color: #39ff14; font-size: 1.4rem; font-weight: bold; margin-bottom: 6px;">CORE STABILIZED</div>
-            <div style="color: #ffffff; font-size: 1rem; margin-bottom: 10px;">AI PARADOX SOLVED!</div>
-            <div style="color: #8a8a9e; font-size: 0.85rem; margin-bottom: 25px;">Attempts required: <span style="color:#00f0ff; font-weight:bold;">${clicksCount}</span></div>
-            <button id="retry-paradox-btn" style="background: #00f0ff; border: none; color: #020406; padding: 12px 30px; font-weight: bold; font-size: 0.95rem; border-radius: 8px; cursor: pointer; width:80%;">RELOAD SYSTEM</button>
-        `;
-        overlay.style.display = 'flex';
-        document.getElementById('retry-paradox-btn').addEventListener('click', startParadoxEngine);
-    }
-
-    function destroyParadoxModal(e) {
-        if(e) { e.preventDefault(); e.stopPropagation(); }
-        gameActive = false;
-        const modal = document.getElementById('paradox-game-modal');
-        if (modal) modal.remove();
-    }
-})();
-            /**
- * ==========================================================================
- * FILE: ai-paradox.js
- * GAME: AI PARADOX - GRID STABILIZER (ANTI-FREEZE CRASH PROOF EDITION)
- * ==========================================================================
- */
-
-(function () {
-    let gameActive = false;
-    let audioCtx = null;
-    let clicksCount = 0;
-    let gridState = []; // 3x3 Grid Matrix
-    const gridSize = 3;
-
-    function tryLaunch(e, targetElement) {
-        let btn = targetElement.closest('button, .btn-play');
-        if (!btn) return;
-
-        let card = btn.closest('.game-card') || btn.parentElement;
-        let cardText = card ? (card.innerText || "").toUpperCase() : "";
-
-        if (cardText.includes('PARADOX') || cardText.includes('AI PARADOX')) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            initAudioContext();
-            setupParadoxModal();
-        }
-    }
-
-    document.addEventListener('click', function(e) { tryLaunch(e, e.target); }, false);
-    document.addEventListener('touchend', function(e) { 
-        if(e.changedTouches && e.changedTouches[0]) { tryLaunch(e, e.target); }
-    }, false);
-
-    function initAudioContext() {
-        if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-    }
-
-    function playGlitchSound(freq, type, duration) {
-        if (!audioCtx) return;
-        try {
-            let osc = audioCtx.createOscillator();
-            let gain = audioCtx.createGain();
-            osc.type = type;
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + duration);
-        } catch (err) {}
-    }
-
-    function setupParadoxModal() {
-        if (document.getElementById('paradox-game-modal')) return;
-
-        const modal = document.createElement('div');
-        modal.id = 'paradox-game-modal';
-        Object.assign(modal.style, {
-            position: 'fixed',
-            top: '0', left: '0', width: '100vw', height: '100vh', height: '100dvh',
-            background: 'rgba(4, 1, 2, 0.99)',
-            backdropFilter: 'blur(20px)', webkitBackdropFilter: 'blur(20px)',
-            zIndex: '99999', display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center',
-            fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-            userSelect: 'none', boxSizing: 'border-box'
-        });
-
-        modal.innerHTML = `
-            <div style="width: 95%; max-width: 400px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(0, 240, 255, 0.3); padding-bottom: 10px;">
-                <div style="text-align: left;">
-                    <div style="color: #00f0ff; font-size: 1.2rem; font-weight: 700; text-shadow: 0 0 8px #00f0ff;">AI PARADOX</div>
-                    <div style="color: #8a8a9e; font-size: 0.65rem; letter-spacing:1px; margin-top: 2px;">STABILIZE THE QUANTUM CORE</div>
-                </div>
-                <div style="color: #ff3b30; cursor: pointer; font-size: 1.8rem; font-weight: bold; padding: 2px 12px; border: 1px solid rgba(255,59,48,0.3); border-radius: 6px; background: rgba(255,59,48,0.05); line-height: 1;" id="close-paradox-btn">×</div>
-            </div>
-
-            <div style="display: flex; justify-content: space-between; width: 95%; max-width: 400px; margin-bottom: 12px; font-size: 0.9rem; font-weight: bold; color: #8a8a9e; padding: 0 5px;">
-                <div>CLICKS: <span id="paradox-clicks-hud" style="color: #00f0ff;">0</span></div>
-                <div>CORE STATUS: <span id="paradox-status-hud" style="color: #ff3b30;">UNSTABLE</span></div>
-            </div>
-
-            <div id="paradox-grid-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 95%; max-width: 400px; aspect-ratio: 1/1; background: #020406; border: 2px solid #00f0ff; border-radius: 16px; padding: 15px; box-shadow: 0 0 25px rgba(0, 240, 255, 0.15); box-sizing: border-box; position: relative;">
-                
-                <div id="paradox-overlay" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; background: rgba(3,5,8,0.98); border-radius:14px; z-index: 10; padding:25px; box-sizing:border-box; text-align:center;">
-                    <div style="font-size: 3.5rem; margin-bottom: 15px;">🌀</div>
-                    <div style="color: #ffffff; font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">Quantum Paradox Loop</div>
-                    <div style="color: #8a8a9e; font-size: 0.85rem; line-height:1.5; margin-bottom: 25px;">Ek node dabane se uske aaspas ke lasers badal jaayenge. Sabhi ko STABLE (GREEN) karo!</div>
-                    <button id="start-paradox-btn" style="background: rgba(0, 240, 255, 0.1); border: 1px solid #00f0ff; color: #00f0ff; padding: 12px 30px; font-weight: bold; font-size: 0.95rem; border-radius: 8px; cursor: pointer; width:80%;">BYPASS LOOP</button>
-                </div>
-            </div>
-        `;
-
-        document.body.appendChild(modal);
-
-        document.getElementById('close-paradox-btn').addEventListener('click', destroyParadoxModal);
-        document.getElementById('close-paradox-btn').addEventListener('touchstart', function(e) {
-            e.preventDefault(); destroyParadoxModal(e);
-        });
-
-        document.getElementById('start-paradox-btn').addEventListener('click', startParadoxEngine);
-    }
-
-    function startParadoxEngine(e) {
-        if(e) e.stopPropagation();
-        document.getElementById('paradox-overlay').style.display = 'none';
-        
-        clicksCount = 0;
-        gameActive = true;
-        document.getElementById('paradox-clicks-hud').innerText = clicksCount;
-        document.getElementById('paradox-status-hud').innerText = "UNSTABLE";
-        document.getElementById('paradox-status-hud').style.color = "#ff3b30";
-
-        // CRITICAL ANTI-FREEZE FIX: Start with a fully green grid, then simulate random valid reverse clicks
-        // This mathematically guarantees the matrix is always 100% solvable without freezing loops.
-        gridState = [
-            [1, 1, 1],
-            [1, 1, 1],
-            [1, 1, 1]
-        ];
-
-        // Scramble the board safely with 4 to 6 random mock triggers
-        const shuffles = 4 + Math.floor(Math.random() * 3); 
-        for (let k = 0; k < shuffles; k++) {
-            let randR = Math.floor(Math.random() * gridSize);
-            let randC = Math.floor(Math.random() * gridSize);
-            
-            // Internal simulation of state inversion
-            toggleNodeState(randR, randC);
-            toggleNodeState(randR - 1, randC);
-            toggleNodeState(randR + 1, randC);
-            toggleNodeState(randR, randC - 1);
-            toggleNodeState(randR, randC + 1);
-        }
-
-        // Edge case fallback: if it ends up completely solved after shuffle, force break one node
-        if (checkWinCondition()) {
-            gridState[1][1] = 0; 
-        }
-
-        renderParadoxGrid();
-    }
-
-    function renderParadoxGrid() {
-        const container = document.getElementById('paradox-grid-container');
-        const overlay = document.getElementById('paradox-overlay');
-        container.innerHTML = '';
-        container.appendChild(overlay);
-
-        for (let r = 0; r < gridSize; r++) {
-            for (let c = 0; c < gridSize; c++) {
-                const node = document.createElement('div');
-                node.dataset.row = r;
-                node.dataset.col = c;
-
-                const isStable = gridState[r][c] === 1;
-                
-                Object.assign(node.style, {
-                    background: isStable ? 'rgba(57, 255, 20, 0.1)' : 'rgba(255, 59, 48, 0.1)',
-                    border: isStable ? '2px solid #39ff14' : '2px solid #ff3b30',
-                    borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '1.8rem', cursor: 'pointer', transition: 'all 0.2s ease'
-                });
-
-                node.innerText = isStable ? '🟢' : '🔴';
-
-                node.addEventListener('click', handleNodeClick);
-                node.addEventListener('touchstart', function(e) {
-                    e.preventDefault(); handleNodeClick.call(node, e);
-                });
-
-                container.appendChild(node);
-            }
-        }
-    }
-
-    function handleNodeClick(e) {
-        if (!gameActive) return;
-        if (e) e.stopPropagation();
-
-        const r = parseInt(this.dataset.row);
-        const c = parseInt(this.dataset.col);
-
-        clicksCount++;
-        document.getElementById('paradox-clicks-hud').innerText = clicksCount;
-        playGlitchSound(280, 'triangle', 0.08);
-
-        // Execute Cross Grid Inversion sequence smoothly
-        toggleNodeState(r, c);       
-        toggleNodeState(r - 1, c);   
-        toggleNodeState(r + 1, c);   
-        toggleNodeState(r, c - 1);   
-        toggleNodeState(r, c + 1);   
-
-        renderParadoxGrid();
-
-        if (checkWinCondition()) {
-            executeParadoxWin();
-        }
-    }
-
-    function toggleNodeState(r, c) {
-        if (r >= 0 && r < gridSize && c >= 0 && c < gridSize) {
-            gridState[r][c] = gridState[r][c] === 1 ? 0 : 1;
-        }
-    }
-
-    function checkWinCondition() {
-        for (let i = 0; i < gridSize; i++) {
-            for (let j = 0; j < gridSize; j++) {
-                if (gridState[i][j] === 0) return false;
-            }
-        }
-        return true;
-    }
-
-    function executeParadoxWin() {
-        gameActive = false;
-        playGlitchSound(587.33, 'sine', 0.25);
-        
-        document.getElementById('paradox-status-hud').innerText = "STABILIZED";
-        document.getElementById('paradox-status-hud').style.color = "#39ff14";
-
-        const overlay = document.getElementById('paradox-overlay');
-        overlay.innerHTML = `
-            <div style="font-size: 3.5rem; margin-bottom: 15px;">⚡</div>
-            <div style="color: #39ff14; font-size: 1.4rem; font-weight: bold; margin-bottom: 6px;">CORE STABILIZED</div>
-            <div style="color: #ffffff; font-size: 1rem; margin-bottom: 10px;">AI PARADOX SOLVED!</div>
-            <div style="color: #8a8a9e; font-size: 0.85rem; margin-bottom: 25px;">Attempts required: <span style="color:#00f0ff; font-weight:bold;">${clicksCount}</span></div>
-            <button id="retry-paradox-btn" style="background: #00f0ff; border: none; color: #020406; padding: 12px 30px; font-weight: bold; font-size: 0.95rem; border-radius: 8px; cursor: pointer; width:80%;">RELOAD SYSTEM</button>
-        `;
-        overlay.style.display = 'flex';
-        document.getElementById('retry-paradox-btn').addEventListener('click', startParadoxEngine);
-    }
-
-    function destroyParadoxModal(e) {
-        if(e) { e.preventDefault(); e.stopPropagation(); }
-        gameActive = false;
-        const modal = document.getElementById('paradox-game-modal');
-        if (modal) modal.remove();
-    }
-})();
-                    
+function exitPdGame() {
+    clearInterval(pdTimer);
+    const overlay = document.getElementById("pd-overlay");
+    const styleTag = document.getElementById("pd-injected-styles");
+    if (overlay) overlay.remove();
+    if (styleTag) styleTag.remove();
+}
