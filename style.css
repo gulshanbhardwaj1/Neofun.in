@@ -114,7 +114,7 @@ body {
 
 
 /* ==========================================================================
-   GLOBAL NAV SYSTEMS (FIXED ALIGNMENT)
+   GLOBAL NAV SYSTEMS (FIXED ALIGNMENT - UNIVERSAL SLIDER MODE)
    ========================================================================== */
 .navbar {
     position: fixed;
@@ -148,11 +148,9 @@ body {
 
 .nav-logo span { color: var(--neon-pink); }
 
-
+/* 🔴 CHANGE 1: Har screen size (Mobile, PC, TV) par links ko permanent hide kiya */
 .nav-links {
-    display: flex;
-    list-style: none;
-    gap: 35px;
+    display: none !important;
 }
 
 .nav-links a {
@@ -176,8 +174,9 @@ body {
 }
 
 /* Hamburg Menu Setup */
+/* 🟢 CHANGE 2: Toggle button ko permanent forced 'flex' kiya taaki slider hamesha dikhe */
 .menu-toggle {
-    display: none;
+    display: flex !important;
     flex-direction: column;
     justify-content: space-between;
     width: 24px;
@@ -193,6 +192,7 @@ body {
     border-radius: 4px;
     transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
+
 
 /* ==========================================================================
    HERO SECTION
