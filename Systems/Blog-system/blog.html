@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO.FUN // Developer Chronicles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #020205;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .page-wrapper {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .blog-header {
+            padding: 30px 10px 20px 10px;
+            text-align: center;
+            background: #000002;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0 0 12px 12px;
+        }
+
+        .main-title {
+            font-family: 'Space Grotesk', sans-serif !important;
+            font-size: 2.5rem; 
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+        .main-title span {
+            color: #00f0ff;
+        }
+        .sub-title {
+            font-family: 'Space Grotesk', sans-serif !important;
+            color: #6a6a7e;
+            margin: 4px 0 0 0;
+            font-size: 0.8rem;
+        }
+        
+        @media (min-width: 768px) {
+            .blog-header { padding: 40px 20px 30px 20px; }
+            .main-title { font-size: 3.5rem !important; letter-spacing: 2px !important; }
+            .sub-title { font-size: 0.95rem !important; }
+            .matrix-tabs-container { gap: 20px !important; margin: 25px auto 15px auto !important; max-width: 500px !important; }
+            .matrix-tab-box { padding: 10px 15px !important; font-size: 0.9rem !important; }
+            .search-box-wrapper { max-width: 450px !important; margin-bottom: 25px !important; }
+            .cyber-text-input { padding: 12px 15px !important; font-size: 0.9rem !important; }
+            .blog-container { gap: 24px !important; }
+            .blog-post { padding: 20px 25px !important; }
+            .blog-content { font-size: 0.95rem !important; }
+        }
+        
+        .matrix-tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px auto 8px auto;
+            width: 100%;
+            max-width: 400px;
+        }
+        .matrix-tab-box {
+            flex: 1;
+            background: transparent;
+            border: 1px solid #ff007f;
+            color: #ff007f;
+            padding: 9px 5px;
+            text-align: center;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Orbitron', sans-serif !important; 
+            letter-spacing: 0.5px;
+        }
+        .matrix-tab-box.active {
+            background: #ff007f;
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(255, 0, 127, 0.4);
+        }
+        .matrix-tab-box.social-tab {
+            border-color: #00f0ff;
+            color: #00f0ff;
+        }
+        .matrix-tab-box.social-tab.active {
+            background: #00f0ff;
+            color: #020205;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+        }
+
+        .search-box-wrapper {
+            width: 100%;
+            max-width: 370px;
+            margin: 5px auto 15px auto;
+        }
+        .search-inner {
+            display: flex;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .cyber-text-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #39ff14;
+            font-family: 'Space Grotesk', sans-serif !important;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            outline: none;
+        }
+        .cyber-text-input::placeholder {
+            color: #4a4a5e;
+        }
+        .clear-search-btn {
+            background: transparent;
+            border: none;
+            color: #6a6a7e;
+            padding: 0 12px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .blog-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        .blog-post {
+            background: #06060c;
+            border-left: 4px solid #39ff14;
+            padding: 14px 16px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+        
+        .blog-meta-header {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+            font-size: 0.72rem;
+            color: #6a6a7e;
+            margin: 0 0 6px 0;
+            line-height: 1.15;
+        }
+        .pub-date {
+            color: #00f0ff;
+            font-weight: 500;
+            display: block;
+        }
+        
+        .blog-content {
+            font-size: 0.82rem !important;
+            color: #ffffff !important;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+            line-height: 1.15 !important;
+            text-align: left !important;
+            margin: 0 0 10px 0 !important;
+            white-space: pre-wrap; 
+        }
+
+        .blog-actions-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: #6a6a7e;
+            font-size: 0.7rem;
+            font-family: 'Space Grotesk', sans-serif !important;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .action-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .comment-section {
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 6px;
+        }
+        .comment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+        .comment-input-row {
+            display: flex;
+            gap: 5px;
+        }
+        .comment-field {
+            background: #020205;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: #ffffff;
+            padding: 4px 6px;
+            font-size: 0.7rem;
+            outline: none;
+        }
+        .comment-name { width: 25%; }
+        .comment-text { flex: 1; }
+        .comment-submit-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #8a8a9e;
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: fit-content;
+        }
+        .comments-display-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 120px;
+            overflow-y: auto;
+            margin-top: 5px;
+        }
+        .single-comment {
+            font-size: 0.7rem !important;
+            color: #b3b9c9;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 4px 6px;
+            border-radius: 4px;
+        }
+        .commenter-name {
+            color: #00f0ff;
+            font-weight: 500;
+        }
+        
+        .btn-back {
+            display: inline-block;
+            margin-top: 8px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #8a8a9e;
+            padding: 5px 12px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-family: 'Space Grotesk', sans-serif !important;
+        }
+        .status-text {
+            color: #4a4a5e;
+            text-align: center;
+            font-size: 0.85rem;
+            margin-top: 40px;
+            font-family: 'Space Grotesk', sans-serif !important;
+        }
+        .blog-footer {
+            text-align: center; 
+            padding: 30px 10px; 
+            color: #222233; 
+            font-size: 0.75rem; 
+            font-family: 'Space Grotesk', sans-serif !important;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <header class="blog-header">
+            <h1 class="main-title">GB <span>LOGS</span></h1>
+            <p class="sub-title">Behind the scenes of NEO.FUN updates</p>
+            <a href="index.html" class="btn-back">← Return To Grid</a>
+        </header>
+
+        <div class="matrix-tabs-container">
+            <div class="matrix-tab-box active" id="tab-dev" onclick="switchCategory('dev')">DEV BLOG</div>
+            <div class="matrix-tab-box social-tab" id="tab-social" onclick="switchCategory('social')">SOCIAL LOG</div>
+        </div>
+
+        <div class="search-box-wrapper">
+            <div class="search-inner">
+                <input type="text" id="cyber-date-search" class="cyber-text-input" placeholder="Search by date..." oninput="filterEngineTrigger()">
+                <button class="clear-search-btn" onclick="resetDateFilter()">×</button>
+            </div>
+        </div>
+
+        <main class="blog-container" id="dynamic-blog-router">
+            <p class="status-text">INITIALIZING...</p>
+        </main>
+
+        <footer class="blog-footer">
+            © 2026 NEO.FUN // CHRONICLES DIVISION
+        </footer>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            databaseURL: "https://neofun-c1400-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let allBlogsDatabase = [];
+        let currentSelectedCategory = 'dev';
+        let targetedSearchQuery = '';
+        let liveStatsRegistry = {};
+
+        fetch('blog.json')
+            .then(res => { if(!res.ok) throw new Error("Missing JSON"); return res.json(); })
+            .then(data => {
+                allBlogsDatabase = data;
+                
+                db.ref('interactions').on('value', (snapshot) => {
+                    liveStatsRegistry = snapshot.val() || {};
+                    renderEngine();
+                });
+            })
+            .catch(err => {
+                document.getElementById('dynamic-blog-router').innerHTML = 
+                    '<p class="status-text" style="color: #ff0055;">CONNECTION ERROR (Check blog.json)</p>';
+            });
+
+        function switchCategory(category) {
+            currentSelectedCategory = category;
+            document.getElementById('tab-dev').classList.remove('active');
+            document.getElementById('tab-social').classList.remove('active');
+            
+            if(category === 'dev') document.getElementById('tab-dev').classList.add('active');
+            else document.getElementById('tab-social').classList.add('active');
+            
+            renderEngine();
+        }
+
+        function filterEngineTrigger() {
+            targetedSearchQuery = document.getElementById('cyber-date-search').value.trim().toLowerCase();
+            renderEngine();
+        }
+
+        function resetDateFilter() {
+            document.getElementById('cyber-date-search').value = '';
+            targetedSearchQuery = '';
+            renderEngine();
+        }
+
+        function getPostSlug(post, index) {
+            return post.date ? `${post.date.replace(/[^a-zA-Z0-9]/g, '')}_${index}` : `post_${index}`;
+        }
+
+        window.handleLike = function(idx, slug) {
+            let currentLikes = (liveStatsRegistry[slug] && liveStatsRegistry[slug].likes) || 0;
+            db.ref(`interactions/${slug}/likes`).set(currentLikes + 1);
+        }
+
+        window.handleDislike = function(idx, slug) {
+            let currentDislikes = (liveStatsRegistry[slug] && liveStatsRegistry[slug].dislikes) || 0;
+            db.ref(`interactions/${slug}/dislikes`).set(currentDislikes + 1);
+        }
+
+        window.handleShare = function() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert("Link copied!");
+            });
+        }
+
+        window.submitComment = function(e, idx, slug) {
+            e.preventDefault();
+            const nameVal = document.getElementById(`c-name-${idx}`).value.trim() || "User";
+            const textVal = document.getElementById(`c-text-${idx}`).value.trim();
+            if(!textVal) return;
+
+            db.ref(`interactions/${slug}/comments`).push({ name: nameVal, text: textVal });
+            document.getElementById(`c-text-${idx}`).value = '';
+        }
+
+        function renderEngine() {
+            const displayGrid = document.getElementById('dynamic-blog-router');
+            displayGrid.innerHTML = ''; 
+
+            if (!allBlogsDatabase || allBlogsDatabase.length === 0) {
+                displayGrid.innerHTML = '<p class="status-text">NO ARCHIVES FOUND</p>';
+                return;
+            }
+
+            let renderedCount = 0;
+
+            allBlogsDatabase.forEach((post, index) => {
+                const cleanJsonCategory = post.category ? post.category.toLowerCase().trim() : '';
+                let isMatch = false;
+                
+                if (currentSelectedCategory === 'dev' && cleanJsonCategory.includes('dev')) isMatch = true;
+                else if (currentSelectedCategory === 'social' && cleanJsonCategory.includes('social')) isMatch = true;
+
+                if (!isMatch) return;
+                
+                if (targetedSearchQuery !== '' && !post.date.toLowerCase().includes(targetedSearchQuery)) return;
+                
+                renderedCount++;
+
+                const slug = getPostSlug(post, index);
+                const stats = liveStatsRegistry[slug] || { likes: 0, dislikes: 0, comments: {} };
+
+                const article = document.createElement('article');
+                article.className = 'blog-post';
+                article.style.borderLeft = `4px solid ${currentSelectedCategory === 'dev' ? '#ff007f' : '#00f0ff'}`;
+
+                let commentsHTML = '';
+                if(stats.comments) {
+                    Object.values(stats.comments).forEach(c => {
+                        commentsHTML += `<div class="single-comment"><span class="commenter-name">${c.name}:</span> ${c.text}</div>`;
+                    });
+                }
+
+                article.innerHTML = `
+                    <div class="blog-meta-header">
+                        <span class="pub-date">${post.date}</span>
+                    </div>
+                    <p class="blog-content">${post.content}</p>
+                    
+                    <div class="blog-actions-bar">
+                        <button class="action-btn" onclick="handleLike(${index}, '${slug}')">👍 <span>${stats.likes || 0}</span></button>
+                        <button class="action-btn" onclick="handleDislike(${index}, '${slug}')">👎 <span>${stats.dislikes || 0}</span></button>
+                        <button class="action-btn" onclick="handleShare()">🔗 Share</button>
+                    </div>
+
+                    <div class="comment-section">
+                        <form class="comment-form" onsubmit="submitComment(event, ${index}, '${slug}')">
+                            <div class="comment-input-row">
+                                <input type="text" id="c-name-${index}" class="comment-field comment-name" placeholder="Name">
+                                <input type="text" id="c-text-${index}" class="comment-field comment-text" placeholder="Add public feedback..." required>
+                            </div>
+                            <button type="submit" class="comment-submit-btn">Comment</button>
+                        </form>
+                        <div class="comments-display-list">${commentsHTML}</div>
+                    </div>
+                `;
+                displayGrid.appendChild(article);
+            });
+
+            if (renderedCount === 0) {
+                displayGrid.innerHTML = '<p class="status-text">NO ARCHIVES FOUND ON THIS TIMELINE</p>';
+            }
+        }
+    </script>
+</body>
+</html>
