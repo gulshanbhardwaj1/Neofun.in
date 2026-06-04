@@ -26,7 +26,7 @@
         <ul class="sidebar-links">
             <li><a href="#" class="sidebar-item active">HOME</a></li>
             <li><a href="#trending" class="sidebar-item">GAMES</a></li>
-            <li><a href="#dev-blog" class="sidebar-item">BLOG</a></li>
+            <li><a href="Systems/Blog-system/blog.html" class="sidebar-item">BLOG</a></li>
                         <a href="#legends-section" onclick="
     /* 1. Side menu ki saari active classes hatao */
     document.querySelectorAll('[class*=\'menu\'], [class*=\'sidebar\'], [class*=\'nav\']').forEach(el => el.classList.remove('active', 'open', 'show'));
@@ -41,7 +41,7 @@
     
     /* 3. Kisi bhi tarah ke dark backdrop overlay ko gayab karo */
     document.querySelectorAll('.overlay, .menu-overlay, .backdrop').forEach(el => { el.style.display = 'none'; el.classList.remove('active', 'show'); });
-" style="color: #fff; text-decoration: none; font-size: 1.5rem; font-family: sans-serif; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 15px 0; display: block; transition: 0.3s;" onmouseover="this.style.color='#39ff14'; this.style.textShadow='0 0 10px #39ff14'" onmouseout="this.style.color='#fff'; this.style.textShadow='none'">OUR LEGENDS</a>
+" style="color: #fff; text-decoration: none; font-size: 1rem; font-family: Orbitron; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 15px 0; display: block; transition: 0.3s;" onmouseover="this.style.color='#39ff14'; this.style.textShadow='0 0 10px #39ff14'" onmouseout="this.style.color='#fff'; this.style.textShadow='none'">OUR LEGENDS</a>
             <li><a href="#about" class="sidebar-item">ABOUT US</a></li>
             <li><a href="#challenges" class="sidebar-item">CONTACT</a></li>
         </ul>
@@ -57,7 +57,7 @@
             <ul class="nav-links">
                 <li><a href="#trending">Trending</a></li>
                 <li><a href="#experimental">Experimental</a></li>
-                <li><a href="#dev-blog">Blog</a></li>
+                <li><a href="Systems/Blog-system/blog.html">Blog</a></li>
                 <li><a href="#about">About</a></li>
             </ul>
                <div class="menu-toggle" id="menu-toggle">
@@ -250,7 +250,7 @@
         
         
                 <section id="dev-blog" class="feed-section" style="margin-top: 60px; padding: 20px 10px;">
-            <h2 class="section-title">📝 Developer BLogs & Milestones</h2>
+            <h2 class="section-title"></h2>
             <div class="blog-container" style="display: flex; flex-direction: column; gap: 25px; max-width: 800px; margin: 0 auto;">
                 
                 <div class="blog-card" style="background: rgba(10, 10, 15, 0.7); border: 1px solid rgba(57, 255, 20, 0.2); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(10px);">
