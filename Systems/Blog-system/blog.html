@@ -343,6 +343,8 @@
             .then(res => { if(!res.ok) throw new Error("Missing JSON"); return res.json(); })
             .then(data => {
                 allBlogsDatabase = data;
+                    allBlogsDatabase.reverse();
+                
                 
                 db.ref('interactions').on('value', (snapshot) => {
                     liveStatsRegistry = snapshot.val() || {};
