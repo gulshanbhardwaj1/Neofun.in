@@ -5,24 +5,26 @@
     "author": "Gulshan Bhardwaj",
     "content": "Welcome to the biggest upgrade yet. We have successfully modularized our game scripts and deployed our new high-performance engine systems."
   },
+  
   {
     "category": "social",
-    "tag": "COMMUNITY SPOTLIGHT",
-    "title": "NEO.FUN Crosses Active Player Milestones!",
-    "date": "2026-06-01",
+    "date": " 02-06-2026",
     "author": "Gulshan Bhardwaj",
     "content": "Our community is growing rapidly across Instagram and Facebook. Thank you for sharing your incredible gameplay screen recordings and review feedback!"
   },
+  
     {
     "category": "dev",
-    "date": "2026-06-03",
+    "date": " 03-06-2026",
     "author": "Gulshan Bhardwaj",
     "content": "I would have deployed the blog system much earlier. It was actually ready within three days, but due to a lack of technical resources and several unforeseen issues, it got delayed.\\n\\nIn hindsight, I realize I should have integrated the blog page sooner. Much of my time was consumed in developing the main portfolio, and recurring technical glitches were the primary bottleneck. However, despite the slow progress, I kept pushing the work forward step by step.\\n\\nThere is still a lot of work left to do. For instance, the sidebar is currently not rendering properly on desktop devices, and fixing this layout issue is my next immediate priority."
     },
+  
   {
     "category": "social",
-    "date": "2026-06-03",
+    "date": " 03-06-2026",
     "author": "Gulshan Bhardwaj",
     "content": "How strange human beings can be! First, they bring home an animal like a goat, feed it well, and take care of its food and water, only to slaughter and eat it themselves later on.\\n\\nI recently saw a man who caught a bird and was trying to feed it with so much love and affection, even though he was going to consume it just a short while later.\\n\\nI honestly fail to understand how people can do this, or what kind of compassion this is. How can someone lovingly feed the very creature they are about to kill and eat?"
-  },
+  }
+  
 ]
