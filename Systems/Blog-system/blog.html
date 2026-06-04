@@ -448,7 +448,9 @@
                     <div class="blog-meta-header">
                         <span class="pub-date">${post.date}</span>
                     </div>
-                    <p class="blog-content">${post.content}</p>
+                    
+                    <p class="blog-content">${post.content.replace(/\\n/g, '<br>')}</p>
+                    
                     
                     <div class="blog-actions-bar">
                         <button class="action-btn" onclick="handleLike(${index}, '${slug}')">👍 <span>${stats.likes || 0}</span></button>
