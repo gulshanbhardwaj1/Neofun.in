@@ -162,6 +162,7 @@
             padding: 14px 16px;
             border-radius: 0 8px 8px 0;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
         }
         
         /* Metadata Elements */
@@ -193,7 +194,7 @@
             line-height: 1.15 !important;
             text-align: left !important;
             font-weight: normal !important;
-            margin: 0 !important;
+            margin: 0 0 10px 0 !important;
             padding: 0 !important;
             letter-spacing: 0.1px !important;
             white-space: pre-wrap; 
@@ -278,6 +279,7 @@
             gap: 4px;
             max-height: 100px;
             overflow-y: auto;
+            margin-top: 5px;
         }
         .single-comment {
             font-size: 0.7rem !important;
@@ -333,7 +335,7 @@
         <header class="blog-header">
             <h1 class="main-title">GB <span>LOGS</span></h1>
             <p class="sub-title">Behind the scenes of NEO.FUN updates</p>
-            <a href="Neo.fun/index.html" class="btn-back">← Return To Grid</a>
+            <a href="../../index.html" class="btn-back">← Return To Grid</a>
         </header>
 
         <div class="matrix-tabs-container">
@@ -366,7 +368,7 @@
         // In-memory runtime data object
         let interactionRegistry = {};
 
-        // 🟢 FIX: Connection query forced to lowercase 'blog.json' exactly
+        // 🟢 FIX 2: Fetches 'blog.json' seamlessly from the exact same directory level
         fetch('blog.json')
             .then(res => {
                 if(!res.ok) throw new Error("Database file missing");
@@ -502,7 +504,7 @@
 
                 const article = document.createElement('article');
                 article.className = 'blog-post';
-                article.style.borderColor = currentSelectedCategory === 'dev' ? '#ff007f' : '#00f0ff';
+                article.style.borderLeft = `4px solid ${currentSelectedCategory === 'dev' ? '#ff007f' : '#00f0ff'}`;
 
                 let dynamicDisplayDate = post.date;
                 try {
@@ -530,10 +532,6 @@
                     <p class="blog-content">${post.content}</p>
                     
                     <div class="blog-actions-bar">
-                        <button class="action-btn" onclick="handleLike(${index})">👍 <span id="like-count-${index}">${registry.likes}</span></button>
-                        <button class="action-btn" onclick="handleDislike(${index})">👎 <span id="dislike-count-${index}">${registry.dislikes}</span></button>
-                        <button class="action-btn" onclick="handleShare(${index})">🔗 Share</button>
-                    </div>
-
-                    <div class="comment-section">
-                     
+                        <button class="action-btn" onclick="handleLike(${index})">👍 <span id=\"like-count-${index}\">${registry.likes}</span></button>
+                        <button class="action-btn" onclick="handleDislike(${index})">👎 <span id=\"dislike-count-${index}\">${registry.dislikes}</span></button>
+                        <button class="action-btn" onclick="handleShare(${index})">🔗 Share</
