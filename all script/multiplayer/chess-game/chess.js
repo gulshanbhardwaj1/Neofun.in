@@ -53,7 +53,7 @@ const defaultLayout = [
 // 🏠 Back to Grid Main Website Control
 function goToGrid() {
     // Agar aapka koi homepage link hai (jaise index.html), toh yahan uska naam likh dein
-    window.location.href = "../index.html"; 
+    window.location.href = "index.html"; 
 }
 
 function selectMode(mode) {
