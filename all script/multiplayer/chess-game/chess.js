@@ -51,6 +51,7 @@ const PAWN_PST = [
     [5, 10, 10,-20,-20, 10, 10,  5],
     [0,  0,  0,  0,  0,  0,  0,  0]
 ];
+
 const KNIGHT_PST = [
     [-50,-40,-30,-30,-30,-30,-40,-50],
     [-40,-20,  0,  0,  0,  0,-20,-40],
@@ -61,6 +62,7 @@ const KNIGHT_PST = [
     [-40,-20,  0,  5,  5,  0,-20,-40],
     [-50,-40,-30,-30,-30,-30,-40,-50]
 ];
+
 const BISHOP_PST = [
     [-20,-10,-10,-10,-10,-10,-10,-20],
     [-10,  0,  0,  0,  0,  0,  0,-10],
@@ -71,6 +73,7 @@ const BISHOP_PST = [
     [-10,  5,  0,  0,  0,  0,  5,-10],
     [-20,-10,-10,-10,-10,-10,-10,-20]
 ];
+
 const ROOK_PST = [
     [0,  0,  0,  0,  0,  0,  0,  0],
     [5, 10, 10, 10, 10, 10, 10,  5],
@@ -81,6 +84,7 @@ const ROOK_PST = [
     [-5,  0,  0,  0,  0,  0,  0, -5],
     [0,  0,  0,  5,  5,  0,  0,  0]
 ];
+
 const QUEEN_PST = [
     [-20,-10,-10, -5, -5,-10,-10,-20],
     [-10,  0,  0,  0,  0,  0,  0,-10],
@@ -91,6 +95,7 @@ const QUEEN_PST = [
     [-10,  0,  5,  0,  0,  0,  0,-10],
     [-20,-10,-10, -5, -5,-10,-10,-20]
 ];
+
 const KING_PST = [
     [-30,-40,-40,-50,-50,-40,-40,-30],
     [-30,-40,-40,-50,-50,-40,-40,-30],
@@ -101,6 +106,7 @@ const KING_PST = [
     [20, 20,  0,  0,  0,  0, 20, 20],
     [20, 30, 10,  0,  0, 10, 30, 20]
 ];
+
 const PSTs = { p: PAWN_PST, n: KNIGHT_PST, b: BISHOP_PST, r: ROOK_PST, q: QUEEN_PST, k: KING_PST };
 
 function evaluateBoard(game) {
@@ -125,16 +131,16 @@ function evaluateBoard(game) {
 }
 
 function negamax(game, depth, alpha, beta) {
-    if (game.isCheckmate()) return -Infinity + (3 - depth);
-    if (game.isDraw() || game.isStalemate() || game.isThreefoldRepetition()) return 0;
+    // ⚡ FIX: chess.js syntax updated to correct API
+    if (game.in_checkmate()) return -Infinity + (3 - depth);
+    if (game.in_draw() || game.in_stalemate() || game.in_threefold_repetition()) return 0;
     if (depth === 0) return evaluateBoard(game);
 
-    const moves = game.moves({ verbose: true });
-    moves.sort((a, b) => (b.captured ? 1 : 0) - (a.captured ? 1 : 0));
+    const moves = game.moves(); 
     let maxEval = -Infinity;
 
     for (const move of moves) {
-        game.move(move.san);
+        game.move(move);
         const evaluation = -negamax(game, depth - 1, -beta, -alpha);
         game.undo();
         maxEval = Math.max(maxEval, evaluation);
@@ -144,26 +150,29 @@ function negamax(game, depth, alpha, beta) {
     return maxEval;
 }
 
-function getBestMove(game, depth = 3) {
-    const moves = game.moves({ verbose: true });
+function getBestMove(game, depth = 2) { 
+    // ⚡ SPEED ENGINE: Default depth set to 2 for instant execution
+    const moves = game.moves();
     if (moves.length === 0) return null;
+
     let bestMove = null;
     let bestValue = -Infinity;
     let alpha = -Infinity;
     let beta = Infinity;
 
     for (const move of moves) {
-        game.move(move.san);
+        game.move(move);
         const boardValue = -negamax(game, depth - 1, -beta, -alpha);
         game.undo();
         if (boardValue > bestValue) {
             bestValue = boardValue;
-            bestMove = move.san;
+            bestMove = move;
         }
         alpha = Math.max(alpha, boardValue);
     }
     return bestMove;
 }
+
 
 // --- CORE LAYOUT MANAGERS ---
 function goToGrid() { window.location.href = "../../../index.html"; }
