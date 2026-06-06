@@ -3,7 +3,7 @@
     "category": "dev",
     "date": " 02-06-2026",
     "author": "Gulshan Bhardwaj",
-    "content": "Welcome to the biggest upgrade yet. We have successfully modularized our game scripts and deployed our new high-performance engine systems."
+    "content": "published at 6:58pm Tuesday\\n\\nTodayWelcome to the biggest upgrade yet. We have successfully modularized our game scripts and deployed our new high-performance engine systems."
   },
   
   {
@@ -17,7 +17,7 @@
     "category": "dev",
     "date": " 03-06-2026",
     "author": "Gulshan Bhardwaj",
-    "content": "I would have deployed the blog system much earlier. It was actually ready within three days, but due to a lack of technical resources and several unforeseen issues, it got delayed.\\n\\nIn hindsight, I realize I should have integrated the blog page sooner. Much of my time was consumed in developing the main portfolio, and recurring technical glitches were the primary bottleneck. However, despite the slow progress, I kept pushing the work forward step by step.\\n\\nThere is still a lot of work left to do. For instance, the sidebar is currently not rendering properly on desktop devices, and fixing this layout issue is my next immediate priority."
+    "content": "published at 3:30pm Wednesday\\n\\nI would have deployed the blog system much earlier. It was actually ready within three days, but due to a lack of technical resources and several unforeseen issues, it got delayed.\\n\\nIn hindsight, I realize I should have integrated the blog page sooner. Much of my time was consumed in developing the main portfolio, and recurring technical glitches were the primary bottleneck. However, despite the slow progress, I kept pushing the work forward step by step.\\n\\nThere is still a lot of work left to do. For instance, the sidebar is currently not rendering properly on desktop devices, and fixing this layout issue is my next immediate priority."
     },
   
   {
@@ -30,7 +30,19 @@
     "category": "dev",
     "date": " 04-06-2026",
     "author": "Gulshan Bhardwaj",
-    "content": "I accomplished the target I set yesterday, today! I fixed the slider menu on the desktop which was not displaying before. Now you can see, it is visible and all its options are working too. Along with this, the blog system is also fully functional now.\\n\\nI don't have any big monitor or a good device. My device is very old and its condition has also become bad. I work by putting a lot of pressure on it, but still, I like my device very much because it has always stood by me, no one else has borne as much workload as it has.\\n\\nThe conversations and exchange of code related to coding between Gemini and me have become so long and heavy that sometimes the chat crashes while loading itself, and many times it is not even able to load."
+    "content": "published at 11:39am Thursday\\n\\nI accomplished the target I set yesterday, today! I fixed the slider menu on the desktop which was not displaying before. Now you can see, it is visible and all its options are working too. Along with this, the blog system is also fully functional now.\\n\\nI don't have any big monitor or a good device. My device is very old and its condition has also become bad. I work by putting a lot of pressure on it, but still, I like my device very much because it has always stood by me, no one else has borne as much workload as it has.\\n\\nThe conversations and exchange of code related to coding between Gemini and me have become so long and heavy that sometimes the chat crashes while loading itself, and many times it is not even able to load."
+  },
+  {
+    "category": "social",
+    "date": " 04-06-2026",
+    "author": "Gulshan Bhardwaj",
+    "content": " can be! First, they bring home an animal like a goat, feed it well, and take care of its food and water, only to slaughter and eat it themselves later on.\\n\\nI recently saw a man who caught a bird and was trying to feed it with so much love and affection, even though he was going to consume it just a short while later.\\n\\nI honestly fail to understand how people can do this, or what kind of compassion this is. How can someone lovingly feed the very creature they are about to kill and eat?"
+  },
+  {
+  "category": "Dev",
+  "date": "05-06-2026",
+  "author": "Gulshan Bhardwaj",
+  "content": "published at 5:40pm Friday\\n\\nToday, I started working on the live multiplayer feature! Right now, the testing for building the game's main base is going on, but its bot is not working correctly yet, and its logic's ending is also not proper. I am currently working on this, and the database setup for live multiplayer is also pending.\\n\\nThe amount of progress my work makes in a single day, I could push it way further than that. But what can I do? My device's backup/working time is extremely low, and it gets discharged very quickly. I do not have any other device or alternative resource. In reality, my device has become a limitation for my work. I am only able to work for one to two hours, whereas if I could get more time than this, my productivity could increase immensely."
   }
   
 ]
