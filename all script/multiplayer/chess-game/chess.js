@@ -234,13 +234,18 @@ const UNICODE_PIECES = {
 function renderBoard() {
     boardElement.innerHTML = '';
     const boardState = chessInstance.board();
-    let isFlipped = (gameMode === 'online' && myColor === 'black');
+    
+    // 🔀 UPDATE HERE: 'black' ki jagah sirf 'b' check karna hai!
+    let isFlipped = (gameMode === 'online' && myColor === 'b');
 
     const colNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
     for (let r = 0; r < 8; r++) {
+        // Flipped board ke liye rows ko invert karne ka sahi tarika
         let row = isFlipped ? (7 - r) : r;
+        
         for (let c = 0; c < 8; c++) {
+            // Flipped board ke liye columns ko invert karne ka sahi tarika
             let col = isFlipped ? (7 - c) : c;
             
             const squareObj = boardState[row][col];
@@ -270,6 +275,7 @@ function renderBoard() {
             boardElement.appendChild(squareSquare);
         }
     }
+
     
     // Status Bar Highlights Updates
     if (chessInstance.turn() === 'w') {
