@@ -1,0 +1,260 @@
+/* --- Global Reset & Cyber Background --- */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #0b0b14;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* --- Popups & Overlay System (Fixed Overlap & Alignment) --- */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 5, 10, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 15px; /* Mobile par safety margin */
+    box-sizing: border-box;
+}
+
+/* Main Menu Box - Desktop & Mobile Safety */
+.menu-box {
+    background: #111122;
+    border: 2px solid #252545;
+    box-shadow: 0 0 25px rgba(0, 255, 204, 0.15);
+    border-radius: 16px;
+    padding: 25px;
+    width: 100%;
+    max-width: 420px; /* Desktop par bada nahi hoga, standard rahega */
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Elements ke beech automatic clean spacing */
+}
+
+/* 🏠 Back to Grid Button Styling & Positioning Fixed */
+.back-grid-btn {
+    align-self: flex-start; /* Apni line mein left side rahega */
+    background: #1f1f3a;
+    color: #00ffcc;
+    border: 1px solid #3b3b6e;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 5px; /* Niche heading se takraaye na */
+}
+
+.back-grid-btn:hover {
+    background: #00ffcc;
+    color: #0b0b14;
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+}
+
+/* Menu Typography */
+.menu-box h3 {
+    font-size: 1.5rem;
+    color: #00ffcc;
+    letter-spacing: 1px;
+    margin: 5px 0;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+}
+
+.menu-box p {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin: 0 0 10px 0;
+}
+
+/* --- Premium Control Buttons --- */
+.menu-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #fff;
+    background: #1b1b36;
+    border: 1px solid #323261;
+    border-radius: 10px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Button Individual Themes */
+.mode-btn:hover {
+    background: #25254d;
+    border-color: #4d4d99;
+}
+
+.online-btn {
+    background: linear-gradient(90deg, #00ffcc, #ff007f);
+    border: none;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.online-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 0, 127, 0.4);
+}
+
+.back-btn {
+    background: #221223;
+    border-color: #542557;
+    color: #ff55bb;
+}
+
+.back-btn:hover {
+    background: #331a34;
+}
+
+/* --- Main Chess Gameplay Layout --- */
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 480px; /* Gameplay board settings */
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-size: 1.6rem;
+    margin: 10px 0;
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255,255,255,0.2);
+}
+
+/* Status Top Panel */
+.status-panel {
+    display: flex;
+    width: 100%;
+    background: #111122;
+    border: 1px solid #232345;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.player-indicator {
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.white-player.active { background: #ffffff; color: #000; }
+.black-player.active { background: #ff007f; color: #fff; }
+.vs-text { color: #555577; font-weight: bold; }
+/* --- Chessboard UI Matrix (Strict Size Lock) --- */
+.board-wrapper {
+    width: 100%;
+    max-width: 440px; /* Desktop aur mobile par perfect lock width */
+    aspect-ratio: 1 / 1; /* Board ko perfect square banaye rakhega */
+    background: #111122;
+    border: 3px solid #00ffcc;
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0 auto 20px auto; /* Center alignment */
+    box-sizing: border-box;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 7.5vw; /* Mobile screens ke liye responsive piece size */
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden; /* Goti dabba se bahar na bhage */
+}
+
+/* Desktop screen ke liye font size lock taaki goti bohot badi na ho jaye */
+@media (min-width: 480px) {
+    .square {
+        font-size: 2.2rem;
+    }
+}
+
+/* Tiles Color Scheme */
+.white-square { background-color: #e2e4e9; color: #222; }
+.black-square { background-color: #3b3b54; color: #fff; }
+
+/* Highlight Filters */
+.selected-white { background-color: #a3e7fc !important; }
+.selected-black { background-color: #ff94c2 !important; }
+.valid-move {
+    box-shadow: inset 0 0 0 4px #00ffcc;
+    background-color: rgba(0, 255, 204, 0.15) !important;
+}
+
+
+
+/* Tiles Color Scheme */
+.white-square { background-color: #e2e4e9; color: #222; }
+.black-square { background-color: #3b3b54; color: #fff; }
+
+/* Highlight Filters */
+.selected-white { background-color: #a3e7fc !important; }
+.selected-black { background-color: #ff94c2 !important; }
+.valid-move {
+    box-shadow: inset 0 0 0 4px #00ffcc;
+    background-color: rgba(0, 255, 204, 0.15) !important;
+}
+
+/* --- Helper Classes --- */
+.hidden {
+    display: none !important;
+}
+
+/* Input boxes for multiplayer room screen */
+input[type="text"] {
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+input[type="text"]:focus {
+    border-color: #00ffcc !important;
+    box-shadow: 0 0 8px rgba(0, 255, 204, 0.3);
+}
