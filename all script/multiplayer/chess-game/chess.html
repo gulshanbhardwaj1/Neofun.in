@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoFun - Cyber Chess Pro</title>
+    <link rel="stylesheet" href="chess.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+    <div class="menu-overlay" id="menu-popup">
+        <div class="menu-box">
+            <button class="back-grid-btn" onclick="goToGrid()"> Back to Grid</button>
+            <h3 style="margin-top: 15px;">SELECT GAME MODE ♟️</h3>
+            <p>Choose how you want to play:</p>
+            <button class="menu-btn mode-btn" onclick="selectMode('offline')">👥 Pass & Play (Offline)</button>
+            <button class="menu-btn mode-btn" onclick="selectMode('bot')">🤖 Play with Bot (AI)</button>
+            <button class="menu-btn online-btn" onclick="showOnlineMenu()">🌐 Play with Friend (Online)</button>
+        </div>
+    </div>
+
+    <div class="menu-overlay hidden" id="online-popup">
+        <div class="menu-box">
+            <h2>🌐 ONLINE MULTIPLAYER</h2>
+            <p>Create a room or join your friend's room:</p>
+            <button class="menu-btn online-btn" onclick="createNewRoom()">✨ Create New Room</button>
+            <div style="margin: 15px 0; color: #777;">— OR —</div>
+            <input type="text" id="room-id-input" placeholder="Enter Room ID Here">
+            <button class="menu-btn mode-btn" onclick="joinExistingRoom()">🔌 Join Room</button>
+            <button class="menu-btn back-btn" onclick="backToMainMenu()">↩ Cancel</button>
+        </div>
+    </div>
+
+    <div class="menu-overlay hidden" id="gameover-popup">
+        <div class="menu-box" style="border-color: #ff0055;">
+            <h2 id="gameover-title">🏆 GAME OVER</h2>
+            <p id="gameover-msg"></p>
+            <button class="menu-btn online-btn" onclick="restartFromGameOver()">🔄 Play Again</button>
+            <button class="menu-btn mode-btn" onclick="exitToMenuFromGameOver()">↩ Main Menu</button>
+        </div>
+    </div>
+
+    <div class="game-container hidden" id="game-area">
+        <h1>♟️ Neo Chess Pro</h1>
+        <div id="online-status-text"></div>
+
+        <div class="status-panel">
+            <div class="player-indicator white-player active" id="p-white">WHITE</div>
+            <div class="vs-text" id="game-mode-title">VS</div>
+            <div class="player-indicator black-player" id="p-black">BLACK</div>
+        </div>
+
+        <div class="board-wrapper">
+            <div class="board" id="chessboard"></div>
+        </div>
+        
+        <div style="display: flex; gap: 10px; width: 100%;">
+            <button class="menu-btn mode-btn hidden" id="copy-link-btn" onclick="copyInviteLink()">📋 Copy Room Link</button>
+            <button class="menu-btn back-btn" onclick="backToMenu()">↩ Leave Game</button>
+        </div>
+    </div>
+
+    <audio id="sfx-move" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav" preload="auto"></audio>
+    <audio id="sfx-capture" src="https://assets.mixkit.co/active_storage/sfx/1594/1594-84.wav" preload="auto"></audio>
+    <audio id="sfx-loser" src="https://assets.mixkit.co/active_storage/sfx/1922/1922-84.wav" preload="auto"></audio>
+    <audio id="sfx-victory" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav" preload="auto"></audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="chess.js"></script>
+</body>
+</html>
