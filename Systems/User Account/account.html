@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEO.FUN - Firebase Account Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="bg-neon-glow"></div>
+    <div class="bg-neon-glow-secondary"></div>
+
+    <div class="account-card">
+        <a href="../../index.html" class="back-link">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            Back to NEO.FUN
+        </a>
+
+        <div class="auth-header" id="auth-status-title">
+            <h2>Connecting Matrix...</h2>
+            <p>Loading user state from Firebase...</p>
+        </div>
+
+        <div id="auth-form-container" class="form-section">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="auth-email" placeholder="player@neo.fun">
+            </div>
+            <div class="form-group">
+                <label>Security Key (Password)</label>
+                <input type="password" id="auth-password" placeholder="••••••••">
+            </div>
+            
+            <div class="button-grid" style="margin-top: 10px;">
+                <button class="neon-btn" id="login-btn">Sign In</button>
+                <button class="logout-btn" id="signup-btn" style="color:#00f7ff; border-color:rgba(0,247,255,0.3)">Create New Account</button>
+            </div>
+        </div>
+
+        <div id="profile-container" class="form-section">
+            <div class="avatar-upload-center">
+                <div class="avatar-display">
+                    <img id="dashboard-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" alt="Avatar">
+                </div>
+                <label for="avatar-file-input" class="upload-badge">Update Avatar</label>
+                <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="form-group">
+                <label>Gamer Tag (Display Name)</label>
+                <input type="text" id="profile-display-name" placeholder="Enter name">
+            </div>
+
+            <div class="form-group">
+                <label>Gamer Bio</label>
+                <input type="text" id="profile-bio" placeholder="Retro gamer, designer...">
+            </div>
+
+            <div class="form-group">
+                <label>Primary Device</label>
+                <input type="text" id="profile-device" placeholder="PC / Mobile / Console">
+            </div>
+
+            <div class="button-grid">
+                <button class="neon-btn save-btn" id="save-profile-btn">Sync to Firebase</button>
+                <button class="logout-btn" id="logout-btn">Terminate Session (Logout)</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
+    <script src="script.js"></script>
+</body>
+</html>
