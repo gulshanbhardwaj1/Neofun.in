@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Social Hub</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:
+radial-gradient(circle at top,#00ffff22,transparent 40%),
+radial-gradient(circle at bottom,#ff00ff22,transparent 40%),
+#050510;
+overflow:hidden;
+}
+
+body::before{
+content:"";
+position:absolute;
+width:100%;
+height:100%;
+background:
+linear-gradient(rgba(0,255,255,.05) 1px,transparent 1px),
+linear-gradient(90deg,rgba(0,255,255,.05) 1px,transparent 1px);
+background-size:40px 40px;
+animation:gridMove 15s linear infinite;
+}
+
+@keyframes gridMove{
+0%{transform:translateY(0);}
+100%{transform:translateY(40px);}
+}
+
+.container{
+position:relative;
+width:90%;
+max-width:700px;
+padding:30px;
+border-radius:25px;
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(20px);
+border:1px solid rgba(0,255,255,.3);
+box-shadow:
+0 0 25px #00ffff66,
+0 0 50px #ff00ff22;
+z-index:2;
+}
+
+.back-btn{
+display:inline-block;
+padding:14px 25px;
+margin-bottom:25px;
+text-decoration:none;
+color:#00ffff;
+font-weight:bold;
+border:2px solid #00ffff;
+border-radius:12px;
+transition:.3s;
+box-shadow:0 0 15px #00ffff88;
+}
+
+.back-btn:hover{
+background:#00ffff;
+color:#000;
+box-shadow:
+0 0 20px #00ffff,
+0 0 40px #00ffff;
+}
+
+h1{
+text-align:center;
+color:white;
+margin-bottom:25px;
+font-size:2rem;
+text-shadow:0 0 15px #00ffff;
+}
+
+.social-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+gap:18px;
+}
+
+.social-btn{
+text-decoration:none;
+color:white;
+padding:18px;
+border-radius:15px;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.15);
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+font-size:1rem;
+transition:.3s;
+}
+
+.social-btn:hover{
+transform:translateY(-5px) scale(1.05);
+border-color:#00ffff;
+box-shadow:
+0 0 15px #00ffff,
+0 0 30px #00ffff55;
+}
+
+.social-btn i{
+font-size:1.4rem;
+}
+
+.youtube:hover{color:#ff3333;}
+.facebook:hover{color:#3b82f6;}
+.instagram:hover{color:#ff00ff;}
+.telegram:hover{color:#00ffff;}
+.github:hover{color:#ffffff;}
+.discord:hover{color:#5865F2;}
+.twitter:hover{color:#1DA1F2;}
+.whatsapp:hover{color:#25D366;}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- Back To Grid Button -->
+<a href="#" class="back-btn">
+<i class="fa-solid fa-arrow-left"></i>
+Back To Grid
+</a>
+
+<h1>⚡ Cyber Social Hub ⚡</h1>
+
+<div class="social-grid">
+
+<a href="#" class="social-btn youtube">
+<i class="fab fa-youtube"></i>
+YouTube
+</a>
+
+<a href="#" class="social-btn facebook">
+<i class="fab fa-facebook"></i>
+Facebook
+</a>
+
+<a href="#" class="social-btn instagram">
+<i class="fab fa-instagram"></i>
+Instagram
+</a>
+
+<a href="#" class="social-btn telegram">
+<i class="fab fa-telegram"></i>
+Telegram
+</a>
+
+<a href="#" class="social-btn github">
+<i class="fab fa-github"></i>
+GitHub
+</a>
+
+<a href="#" class="social-btn discord">
+<i class="fab fa-discord"></i>
+Discord
+</a>
+
+<a href="#" class="social-btn twitter">
+<i class="fab fa-x-twitter"></i>
+X / Twitter
+</a>
+
+<a href="#" class="social-btn whatsapp">
+<i class="fab fa-whatsapp"></i>
+WhatsApp
+</a>
+
+</div>
+
+</div>
+
+</body>
+  </html>
