@@ -43,6 +43,13 @@
   "date": "05-06-2026",
   "author": "Gulshan Bhardwaj",
   "content": "published at 5:40pm Friday\\n\\nToday, I started working on the live multiplayer feature! Right now, the testing for building the game's main base is going on, but its bot is not working correctly yet, and its logic's ending is also not proper. I am currently working on this, and the database setup for live multiplayer is also pending.\\n\\nThe amount of progress my work makes in a single day, I could push it way further than that. But what can I do? My device's backup/working time is extremely low, and it gets discharged very quickly. I do not have any other device or alternative resource. In reality, my device has become a limitation for my work. I am only able to work for one to two hours, whereas if I could get more time than this, my productivity could increase immensely."
+  },
+  {
+  "category": "Dev",
+  "date": "07-06-2026",
+  "author": "Gulshan Bhardwaj",
+  "content": "published at 9:31am sunday\\n\\Today, I started a new project and was working on making the frontend. But it couldn't be made today. Now, keeping the API in JavaScript is not secure. I want to make my own AI chatbot, and I am working for it; the frontend is not made yet.\\n\\ I know that nobody reads or looks at my blog, but still, I write, and I will keep writing."
   }
+  
   
 ]
