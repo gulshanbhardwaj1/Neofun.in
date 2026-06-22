@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Master X</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="background"></div>
+
+<div class="game-container">
+
+    <!--==================== TOP BAR ====================-->
+
+    <header class="top-bar">
+      
+      <a href="https://gulshanbhardwaj1.github.io/Neo.fun/" class="back-btn">← Back to grid</a>
+
+
+        <div class="logo">
+            🐍 Snake Master X
+        </div>
+
+        <div class="stats">
+
+            <div class="card">
+                🪙
+                <span id="coins">0</span>
+            </div>
+
+            <div class="card">
+                ⭐
+                <span id="score">0</span>
+            </div>
+
+            <div class="card">
+                🏆
+                <span id="bestScore">0</span>
+            </div>
+
+            <div class="card">
+                ❤️
+                <span id="lives">3</span>
+            </div>
+
+        </div>
+
+    </header>
+
+    <!--==================== GAME ====================-->
+
+    <main class="game-area">
+
+        <canvas id="gameCanvas" width="600" height="600"></canvas>
+
+    </main>
+
+    <!--==================== CONTROLS ====================-->
+
+    <div class="mobile-controls">
+
+        <button id="up">▲</button>
+
+        <div class="middle">
+
+            <button id="left">◀</button>
+
+            <button id="down">▼</button>
+
+            <button id="right">▶</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--==================== SIDE PANEL ====================-->
+
+<div class="side-panel">
+
+    <h2>Snake Skin</h2>
+
+    <select id="skinSelect">
+
+        <option value="green">🟢 Green</option>
+        <option value="blue">🔵 Blue</option>
+        <option value="red">🔴 Red</option>
+        <option value="purple">🟣 Purple</option>
+        <option value="gold">🟡 Gold</option>
+        <option value="black">⚫ Black</option>
+
+    </select>
+
+    <h2>Difficulty</h2>
+
+    <select id="difficulty">
+
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+        <option value="insane">Insane</option>
+
+    </select>
+
+    <div class="buttons">
+
+        <button id="startBtn">
+            ▶ Start
+        </button>
+
+        <button id="pauseBtn">
+            ⏸ Pause
+        </button>
+
+        <button id="restartBtn">
+            🔄 Restart
+        </button>
+
+    </div>
+
+</div>
+
+<!--==================== GAME OVER ====================-->
+
+<div id="gameOver" class="popup">
+
+    <div class="popup-box">
+
+        <h1>GAME OVER</h1>
+
+        <p>Score : <span id="finalScore">0</span></p>
+
+        <p>Best : <span id="finalBest">0</span></p>
+
+        <p>Coins : <span id="earnedCoins">0</span></p>
+
+        <button id="playAgain">
+            Play Again
+        </button>
+
+    </div>
+
+</div>
+
+<!--==================== SHOP ====================-->
+
+<div id="shop" class="popup">
+
+    <div class="popup-box">
+
+        <h1>Skin Shop</h1>
+
+        <div class="shop-grid">
+
+            <button>🟢 Green</button>
+            <button>🔵 Blue</button>
+            <button>🔴 Red</button>
+            <button>🟣 Purple</button>
+            <button>🟡 Gold</button>
+            <button>⚫ Black</button>
+
+        </div>
+
+        <button id="closeShop">
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+<!--==================== SETTINGS ====================-->
+
+<div id="settings" class="popup">
+
+    <div class="popup-box">
+
+        <h1>Settings</h1>
+
+        <label>
+            <input type="checkbox" checked>
+            Music
+        </label>
+
+        <label>
+            <input type="checkbox" checked>
+            Sound
+        </label>
+
+        <label>
+            <input type="checkbox">
+            Grid
+        </label>
+
+        <button id="closeSettings">
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
